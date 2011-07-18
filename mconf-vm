@@ -1,0 +1,33 @@
+#!/bin/bash
+
+MCONF_WEB_CONF_URL=https://raw.github.com/mconf/mconf-web/master/script/mconf-web-conf
+MCONF_WEB_CONF_OUTPUT=/usr/local/bin/mconf-web-conf
+MCONF_BBB_CONF_URL=https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf
+MCONF_BBB_CONF_OUTPUT=/usr/local/bin/mconf-bbb-conf
+MCONF_WEB_SETUP_CONF=~/dev/source/mconf-web/config/setup_conf.yml
+PORT=8888
+
+# installs mconf-web-conf and mconf-bbb-conf
+sudo curl $MCONF_WEB_CONF_URL -o $MCONF_WEB_CONF_OUTPUT
+sudo curl $MCONF_BBB_CONF_URL -o $MCONF_BBB_CONF_OUTPUT
+sudo chmod a+x $MCONF_WEB_CONF_OUTPUT
+sudo chmod a+x $MCONF_BBB_CONF_OUTPUT
+
+# get an IP
+sudo dhclient
+IP=$(ifconfig | grep -v '127.0.0.1' | grep -E "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | head -1 | cut -d: -f2 | awk '{print $1}') # local IP got from ifconfig
+
+# Configure our customizations of BBB
+mconf-bbb-conf
+
+# configure BBB in a different IP:port
+sudo bbb-conf --setip $IP:$PORT
+
+# automatically configure some files in mconf-web
+SALT=`bbb-conf --salt | grep "Salt" | sed 's/[[:blank:]]*Salt: //'`
+sed -i "s/\(^[[:space:]]*bbb_server_url:\)[^#$]*\(.*\)$/\1 \"http:\/\/${IP}:${PORT}\/bigbluebutton\/api\" \2/g" $MCONF_WEB_SETUP_CONF
+sed -i "s/\(^[[:space:]]*bbb_server_salt:\)[^#$]*\(.*\)$/\1 \"${SALT}\" \2/g" $MCONF_WEB_SETUP_CONF
+sed -i "s/\(^[[:space:]]*site_domain:\)[^#$]*\(.*\)$/\1 \"${IP}\" \2/g" $MCONF_WEB_SETUP_CONF
+
+# final setup of mconf-web that needs user input
+mconf-web-conf --setup-vm
