@@ -6,27 +6,19 @@
 #
 # You can find this file at: https://github.com/mconf/installation-scripts
 
-MCONF_WEB_CONF_URL=https://raw.github.com/mconf/mconf-web/master/script/mconf-web-conf
-MCONF_WEB_CONF_OUTPUT=/usr/local/bin/mconf-web-conf
+MCONF_VM_VERSION=0.1
 MCONF_WEB_SETUP_CONF=~/dev/source/mconf-web/config/setup_conf.yml
-
-MCONF_BBB_CONF_URL=https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf
-MCONF_BBB_CONF_OUTPUT=/usr/local/bin/mconf-bbb-conf
-
 PORT=8888
 
-# installs mconf-web-conf and mconf-bbb-conf
-sudo curl $MCONF_WEB_CONF_URL -o $MCONF_WEB_CONF_OUTPUT
-sudo curl $MCONF_BBB_CONF_URL -o $MCONF_BBB_CONF_OUTPUT
-sudo chmod a+x $MCONF_WEB_CONF_OUTPUT
-sudo chmod a+x $MCONF_BBB_CONF_OUTPUT
+echo
+echo "*******************************************************************************"
+echo " Setting up Mconf VM version ${MCONF_VM_VERSION}"
+echo "*******************************************************************************"
+echo
 
 # get an IP
 sudo dhclient
 IP=$(ifconfig | grep -v '127.0.0.1' | grep -E "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | head -1 | cut -d: -f2 | awk '{print $1}') # local IP got from ifconfig
-
-# Configure our customizations of BBB
-#mconf-bbb-conf
 
 # configure BBB in a different IP:port
 sudo bbb-conf --setip $IP:$PORT
