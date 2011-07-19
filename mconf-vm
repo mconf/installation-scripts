@@ -1,25 +1,15 @@
 #!/bin/bash
 
-# This is the Mconf VM startup script.
-# It should be run once (and only once) when you start the VM for the first time.
-# The script will configure specific settings for your VM instance.
+# This is the Mconf VM startup script. The script will configure specific settings for
+# your VM instance.
+# It should be run once when you start the VM for the first time. Be aware that if you
+# run it again you will clean your BBB instance and reset Mconf-Web, dropping and
+# recreating the DB.
 #
 # You can find this file at: https://github.com/mconf/installation-scripts
 
 MCONF_VM_VERSION=0.1    # Mconf VM version
 BBB_PORT=8888           # Port for BigBlueButton
-
-if [[ $# -ge 1 ]]; then
-    IP="${1}"
-    echo "* Setting IP to ${IP}"
-    shift
-fi
-if [[ $# -ge 1 ]]; then
-    BBB_PORT="${1}"
-    echo "* Setting BigBlueButton port to ${BBB_PORT}"
-    shift
-fi
-
 
 echo
 echo "*******************************************************************************"
@@ -31,12 +21,28 @@ echo
 sudo dhclient
 IP=$(ifconfig | grep -v '127.0.0.1' | grep -E "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | head -1 | cut -d: -f2 | awk '{print $1}') # local IP got from ifconfig
 
-# Configures BBB in a different IP:port
-sudo bbb-conf --setip $IP:$BBB_PORT
+# checks for user args
+if [[ $# -ge 1 ]]; then
+    IP="${1}"
+    echo "* Setting IP to ${IP}"
+    shift
+fi
+if [[ $# -ge 1 ]]; then
+    BBB_PORT="${1}"
+    echo "* Setting BigBlueButton port to ${BBB_PORT}"
+    shift
+fi
 
-# Mconf-Wweb configurations. Need user input.
+# Configures our customizations over BBB
+mconf-bbb-conf $IP:$BBB_PORT
+
+# Configures BBB in a different IP:port
+#sudo bbb-conf --setip $IP:$BBB_PORT
+
+# Mconf-Web configurations. Needs user input.
 mconf-web-conf --setup-vm $IP $BBB_PORT
 
+# we have to restart nginx b/c mconf-web-conf alters its configuration files
 sudo /etc/init.d/nginx restart
 
 echo

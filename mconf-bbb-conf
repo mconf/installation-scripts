@@ -5,6 +5,8 @@
 ##
 ## wget https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf; chmod a+x mconf-bbb-conf; ./mconf-bbb-conf
 ##
+## Usage: mconf-bbb-conf [IP:PORT]
+##
 
 HOME=/home/firstuser
 BBB_SOURCE=$HOME/dev/source/bigbluebutton
@@ -12,6 +14,16 @@ MCONF_REPOS=git://github.com/mconf/bigbluebutton.git
 ## http://bash.cyberciti.biz/misc-shell/read-local-ip-address/
 HOST=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 PORT=8888
+
+# check for user args
+if [[ $# -ge 1 ]]; then
+    HOST="${1}"
+    if echo $HOST|grep -q ":"; then
+        HOST=`echo ${1}|cut -d: -f1`
+        PORT=`echo ${1}|cut -d: -f2`
+    fi
+fi
+echo "# Setting IP:PORT to ${HOST}:${PORT}"
 
 ## http://stackoverflow.com/questions/59838/how-to-check-if-a-directory-exists-in-a-bash-shell-script
 if [ ! -d "$BBB_SOURCE" ]
