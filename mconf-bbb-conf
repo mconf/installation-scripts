@@ -6,8 +6,12 @@
 ## wget https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf; chmod a+x mconf-bbb-conf; ./mconf-bbb-conf
 ##
 
-BBB_SOURCE=~/dev/source/bigbluebutton
+HOME=/home/firstuser
+BBB_SOURCE=$HOME/dev/source/bigbluebutton
 MCONF_REPOS=git://github.com/mconf/bigbluebutton.git
+## http://bash.cyberciti.biz/misc-shell/read-local-ip-address/
+HOST=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+PORT=8888
 
 ## http://stackoverflow.com/questions/59838/how-to-check-if-a-directory-exists-in-a-bash-shell-script
 if [ ! -d "$BBB_SOURCE" ]
@@ -30,21 +34,17 @@ else
     fi
 
     echo '## Updating the mconf repository'
-    cd $BBB_SOURCE; git pull origin master; cd ~
+    cd $BBB_SOURCE; git pull origin master; cd $HOME
 fi
 
 sudo apt-get -y install ant
 
 echo '## Adding FLAT_REPO environment variable'
-if [ `grep 'export FLAT_REPO' ~/.profile | wc -l` -eq 0 ]
+if [ `grep 'export FLAT_REPO' $HOME/.profile | wc -l` -eq 0 ]
 then
-    echo 'export FLAT_REPO=~/dev/repo' >> ~/.profile
+    echo 'export FLAT_REPO=$HOME/dev/repo' >> $HOME/.profile
 fi
-source ~/.profile > /dev/null
-
-## http://bash.cyberciti.biz/misc-shell/read-local-ip-address/
-HOST=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
-PORT=8888
+source $HOME/.profile > /dev/null
 
 echo '## Setting development environment for the client'
 bbb-conf --setup-dev client
