@@ -7,7 +7,19 @@
 # You can find this file at: https://github.com/mconf/installation-scripts
 
 MCONF_VM_VERSION=0.1    # Mconf VM version
-PORT=8888               # Port for BigBlueButton
+BBB_PORT=8888           # Port for BigBlueButton
+
+if [[ $# -ge 1 ]]; then
+    IP="${1}"
+    echo "* Setting IP to ${IP}"
+    shift
+fi
+if [[ $# -ge 1 ]]; then
+    BBB_PORT="${1}"
+    echo "* Setting BigBlueButton port to ${BBB_PORT}"
+    shift
+fi
+
 
 echo
 echo "*******************************************************************************"
@@ -20,7 +32,17 @@ sudo dhclient
 IP=$(ifconfig | grep -v '127.0.0.1' | grep -E "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | head -1 | cut -d: -f2 | awk '{print $1}') # local IP got from ifconfig
 
 # Configures BBB in a different IP:port
-sudo bbb-conf --setip $IP:$PORT
+sudo bbb-conf --setip $IP:$BBB_PORT
 
 # Mconf-Wweb configurations. Need user input.
-mconf-web-conf --setup-vm $PORT
+mconf-web-conf --setup-vm $IP $BBB_PORT
+
+echo
+echo "*******************************************************************************"
+echo "  Mconf VM setup complete."
+echo "  BigBlueButton at: $IP:$BBB_PORT"
+echo "      Mconf-Web at: $IP:80"
+echo "*******************************************************************************"
+echo
+echo "Please, open your browser and access $IP to check if your installation is correct."
+echo
