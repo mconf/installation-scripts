@@ -55,6 +55,7 @@ sudo cp /var/www/bigbluebutton/client/conf/config.xml src/conf/config.xml
 sed -i "s/showDebugWindow=\"false\"/showDebugWindow=\"true\"/g" src/conf/config.xml
 sed -i "s/<version>VERSION<\/version>/<version> - Mconf Test Server<\/version>/g" src/conf/config.xml
 sed -i "s/VERSION/3818/g" src/conf/config.xml
+sed -i ':a;N;$!ba;s/\(<module name="SettingsModule"[^>]*\/>\)/<!--\1-->/g' src/conf/config.xml
 echo '## Compiling the client'
 ant
 
