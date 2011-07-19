@@ -1,0 +1,1121 @@
+#########################################################
+# Installing and configuring Mconf BigBlueButton server #
+#########################################################
+## Cloning the mconf repository
+# Request to checkout BigBlueButton
+/usr/bin/git
+# Changing to the dev directory
+# Creating source directory
+# Changing to the dev directory
+#                                         
+# Cloning BigBlueButton.
+#                                         
+# 
+Initialized empty Git repository in /home/firstuser/dev/source/bigbluebutton/.git/
+ Checking out version 0.71a 
+# 
+#                                         
+# Checked out BigBlueButton. 
+#                                         
+ You can now run 'bbb-conf --setup-dev [client|web|apps]' to setup dev environment 
+#                                         
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following extra packages will be installed:
+  ant-gcj ant-optional ant-optional-gcj gcj-4.4-base gcj-4.4-jre-lib libgcj-bc
+  libgcj-common libgcj10 libjaxp1.3-java libxerces2-java
+Suggested packages:
+  ant-doc libbsf-java liboro-java libxalan2-java junit liblog4j1.2-java
+  libregexp-java jython antlr libbcel-java libcommons-logging-java
+  libjdepend-java libgnumail-java libxml-commons-resolver1.1-java
+  libcommons-net-java libjsch-java javacc libgcj10-dbg libgcj10-awt
+  libjaxp1.3-java-gcj libxerces2-java-doc libxerces2-java-gcj
+The following NEW packages will be installed:
+  ant ant-gcj ant-optional ant-optional-gcj gcj-4.4-base gcj-4.4-jre-lib
+  libgcj-bc libgcj-common libgcj10 libjaxp1.3-java libxerces2-java
+0 upgraded, 11 newly installed, 0 to remove and 0 not upgraded.
+Need to get 22.1MB/27.5MB of archives.
+After this operation, 62.8MB of additional disk space will be used.
+Get:1 http://us.archive.ubuntu.com/ubuntu/ lucid-updates/main gcj-4.4-base 4.4.3-1ubuntu4.1 [110kB]
+Get:2 http://us.archive.ubuntu.com/ubuntu/ lucid-updates/main libgcj10 4.4.3-1ubuntu4.1 [11.5MB]
+Get:3 http://us.archive.ubuntu.com/ubuntu/ lucid-updates/main gcj-4.4-jre-lib 4.4.3-1ubuntu4.1 [10.5MB]
+Fetched 22.1MB in 48s (454kB/s)
+Selecting previously deselected package libjaxp1.3-java.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 34675 files and directories currently installed.)
+Unpacking libjaxp1.3-java (from .../libjaxp1.3-java_1.3.04-5ubuntu3_i386.deb) ...
+Selecting previously deselected package libxerces2-java.
+Unpacking libxerces2-java (from .../libxerces2-java_2.9.1-4ubuntu1_all.deb) ...
+Selecting previously deselected package ant.
+Unpacking ant (from .../ant_1.7.1-4ubuntu1.1_all.deb) ...
+Selecting previously deselected package libgcj-common.
+Unpacking libgcj-common (from .../libgcj-common_1%3a4.4.3-1ubuntu1_all.deb) ...
+Selecting previously deselected package gcj-4.4-base.
+Unpacking gcj-4.4-base (from .../gcj-4.4-base_4.4.3-1ubuntu4.1_i386.deb) ...
+Selecting previously deselected package libgcj10.
+Unpacking libgcj10 (from .../libgcj10_4.4.3-1ubuntu4.1_i386.deb) ...
+Selecting previously deselected package libgcj-bc.
+Unpacking libgcj-bc (from .../libgcj-bc_4.4.3-4ubuntu1_i386.deb) ...
+Selecting previously deselected package ant-gcj.
+Unpacking ant-gcj (from .../ant-gcj_1.7.1-4ubuntu1.1_i386.deb) ...
+Selecting previously deselected package ant-optional.
+Unpacking ant-optional (from .../ant-optional_1.7.1-4ubuntu1.1_all.deb) ...
+Selecting previously deselected package ant-optional-gcj.
+Unpacking ant-optional-gcj (from .../ant-optional-gcj_1.7.1-4ubuntu1.1_i386.deb) ...
+Selecting previously deselected package gcj-4.4-jre-lib.
+Unpacking gcj-4.4-jre-lib (from .../gcj-4.4-jre-lib_4.4.3-1ubuntu4.1_all.deb) ...
+Processing triggers for man-db ...
+Setting up libjaxp1.3-java (1.3.04-5ubuntu3) ...
+Setting up libxerces2-java (2.9.1-4ubuntu1) ...
+Setting up ant (1.7.1-4ubuntu1.1) ...
+Setting up libgcj-common (1:4.4.3-1ubuntu1) ...
+
+Setting up gcj-4.4-base (4.4.3-1ubuntu4.1) ...
+Setting up ant-optional (1.7.1-4ubuntu1.1) ...
+Processing triggers for python-central ...
+Setting up libgcj10 (4.4.3-1ubuntu4.1) ...
+
+Setting up libgcj-bc (4.4.3-4ubuntu1) ...
+Setting up ant-gcj (1.7.1-4ubuntu1.1) ...
+
+Setting up ant-optional-gcj (1.7.1-4ubuntu1.1) ...
+
+Setting up gcj-4.4-jre-lib (4.4.3-1ubuntu4.1) ...
+Processing triggers for libc-bin ...
+ldconfig deferred processing now taking place
+## Adding FLAT_REPO environment variable
+## Setting development environment for the client
+Modifying /etc/nginx/sites-available/bigbluebutton to point to your local copy of bbb-client
+Restarting nginx: nginx.
+# Copying /var/www/bigbluebutton/client/conf/config.xml to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/src/conf/config.xml
+# Copying /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/resources/dev/join-mock.xml to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/src/conf/join-mock.xml
+# Creating /var/bigbluebutton/conference-mock-default/conference-mock-default/room-mock-default
+# chown /var/bigbluebutton/conference-mock-default to tomcat6
+
+# Done.  To build your local build of bbb-client:
+
+        cd /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client
+        ant
+
+# The nginx server now loads the BigBlueButton Flash client from
+# /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client.
+
+## Configuring the config.xml on the client
+## Setting IP on BigBlueButton
+Assigning 192.168.0.101 for testing for firewall in /var/www/bigbluebutton/client/conf/config.xml
+Assigning 192.168.0.101 for rtmp:// in /var/www/bigbluebutton/client/conf/config.xml
+Assigning 192.168.0.101 for servername in /etc/nginx/sites-available/bigbluebutton
+Assigning 192.168.0.101:8888 for http:// in /var/www/bigbluebutton/client/conf/config.xml
+Assigning 192.168.0.101:8888 for web application URL in /var/lib/tomcat6/webapps/bigbluebutton/WEB-INF/classes/bigbluebutton.properties
+Assigning 8888 for listen in /etc/nginx/sites-available/bigbluebutton
+Assigning 192.168.0.101:8888 for api demos in /var/lib/tomcat6/webapps/bigbluebutton/demo/bbb_api_conf.jsp
+Restarting the bigbluebutton server ...
+ * Stopping Red5 Server red5
+   ...done.
+ * Stopping Tomcat servlet engine tomcat6
+   ...done.
+Stopping nginx: nginx.
+ * Stopping Apache ActiveMQ service activemq
+   ...done.
+Stopping OpenOffice headless server.
+
+Starting FreeSWITCH
+ * Starting Apache ActiveMQ service activemq
+   ...done.
+Waiting for ActiveMQ to start: 
+Waiting for FreeSWITCH to start: .............
+Starting OpenOffice headless server
+Starting nginx: nginx.
+ * Starting Red5 Server red5
+
+   ...done.
+ * Starting Tomcat servlet engine tomcat6
+   ...done.
+Waiting for BigBlueButton to finish starting up (this may take a minute):  done
+## Compiling the client
+Buildfile: build.xml
+
+clean:
+   [delete] Deleting directory /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+    [mkdir] Created dir: /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+
+generate-html-wrapper:
+
+init-ant-contrib:
+
+localization:
+     [echo] Parsing /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/src/conf/locales.xml for supported locales
+     [echo] Available locales az_AZ,bg_BG,cs_CZ,da_DK,de_DE,el_GR,en_US,es_ES,es_LA,fa_IR,fr_FR,fr_CA,hr_HR,hu_HU,id_ID,it_IT,ja_JP,ko_KR,lv_LV,lt_LT,nb_NO,nl_NL,pl_PL,pt_BR,pt_PT,ro_RO,ru_RU,sv_SE,sr_RS,sr_SR,th_TH,tr_TR,vi_VN,uk_UA,zh_CN,zh_TW
+
+build-locale:
+     [echo] Building az_AZ
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/az_AZ
+     [echo] Building az_AZ
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/az_AZ
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/az_AZ_resources.swf (24222 bytes)
+
+build-locale:
+     [echo] Building bg_BG
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/bg_BG
+     [echo] Building bg_BG
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/bg_BG
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/bg_BG_resources.swf (24772 bytes)
+
+build-locale:
+     [echo] Building cs_CZ
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/cs_CZ
+     [echo] Building cs_CZ
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/cs_CZ
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/cs_CZ_resources.swf (24103 bytes)
+
+build-locale:
+     [echo] Building da_DK
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/da_DK
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/da_DK/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/da_DK/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/da_DK/rpc_rb.swc (9260 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/da_DK/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/da_DK/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/da_DK/framework_rb.swc (14603 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/da_DK/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/da_DK/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/da_DK/airframework_rb.swc (5599 bytes)
+     [echo] Building da_DK
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/da_DK
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/da_DK_resources.swf (23854 bytes)
+
+build-locale:
+     [echo] Building de_DE
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/de_DE
+     [echo] Building de_DE
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/de_DE
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/de_DE_resources.swf (23958 bytes)
+
+build-locale:
+     [echo] Building el_GR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/el_GR
+     [echo] Building el_GR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/el_GR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/el_GR_resources.swf (25324 bytes)
+
+build-locale:
+     [echo] Building en_US
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/en_US
+     [echo] Building en_US
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/en_US
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/en_US_resources.swf (24667 bytes)
+
+build-locale:
+     [echo] Building es_ES
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/es_ES
+     [echo] Building es_ES
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/es_ES
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/es_ES_resources.swf (24066 bytes)
+
+build-locale:
+     [echo] Building es_LA
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/es_LA
+     [echo] Building es_LA
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/es_LA
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/es_LA_resources.swf (24467 bytes)
+
+build-locale:
+     [echo] Building fa_IR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/fa_IR
+     [echo] Building fa_IR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/fa_IR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/fa_IR_resources.swf (24776 bytes)
+
+build-locale:
+     [echo] Building fr_FR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/fr_FR
+     [echo] Building fr_FR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/fr_FR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/fr_FR_resources.swf (24197 bytes)
+
+build-locale:
+     [echo] Building fr_CA
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/fr_CA
+     [echo] Building fr_CA
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/fr_CA
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/fr_CA_resources.swf (24674 bytes)
+
+build-locale:
+     [echo] Building hr_HR
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/hr_HR
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/hr_HR/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/hr_HR/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/hr_HR/rpc_rb.swc (9266 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/hr_HR/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/hr_HR/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/hr_HR/framework_rb.swc (14607 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/hr_HR/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/hr_HR/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/hr_HR/airframework_rb.swc (5600 bytes)
+     [echo] Building hr_HR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/hr_HR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/hr_HR_resources.swf (24274 bytes)
+
+build-locale:
+     [echo] Building hu_HU
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/hu_HU
+     [echo] Building hu_HU
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/hu_HU
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/hu_HU_resources.swf (24089 bytes)
+
+build-locale:
+     [echo] Building id_ID
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/id_ID
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/id_ID/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/id_ID/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/id_ID/rpc_rb.swc (9263 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/id_ID/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/id_ID/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/id_ID/framework_rb.swc (14604 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/id_ID/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/id_ID/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/id_ID/airframework_rb.swc (5600 bytes)
+     [echo] Building id_ID
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/id_ID
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/id_ID_resources.swf (23874 bytes)
+
+build-locale:
+     [echo] Building it_IT
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/it_IT
+     [echo] Building it_IT
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/it_IT
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/it_IT_resources.swf (24408 bytes)
+
+build-locale:
+     [echo] Building ja_JP
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ja_JP
+     [echo] Building ja_JP
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ja_JP
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/ja_JP_resources.swf (24440 bytes)
+
+build-locale:
+     [echo] Building ko_KR
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ko_KR
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/ko_KR/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/ko_KR/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/ko_KR/rpc_rb.swc (9261 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/ko_KR/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/ko_KR/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/ko_KR/framework_rb.swc (14602 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/ko_KR/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/ko_KR/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/ko_KR/airframework_rb.swc (5601 bytes)
+     [echo] Building ko_KR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ko_KR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/ko_KR_resources.swf (25193 bytes)
+
+build-locale:
+     [echo] Building lv_LV
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/lv_LV
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/lv_LV/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/lv_LV/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/lv_LV/rpc_rb.swc (9267 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/lv_LV/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/lv_LV/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/lv_LV/framework_rb.swc (14604 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/lv_LV/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/lv_LV/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/lv_LV/airframework_rb.swc (5609 bytes)
+     [echo] Building lv_LV
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/lv_LV
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/lv_LV_resources.swf (23986 bytes)
+
+build-locale:
+     [echo] Building lt_LT
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/lt_LT
+     [echo] Building lt_LT
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/lt_LT
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/lt_LT_resources.swf (23946 bytes)
+
+build-locale:
+     [echo] Building nb_NO
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/nb_NO
+     [echo] Building nb_NO
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/nb_NO
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/nb_NO_resources.swf (23893 bytes)
+
+build-locale:
+     [echo] Building nl_NL
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/nl_NL
+     [echo] Building nl_NL
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/nl_NL
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/nl_NL_resources.swf (25007 bytes)
+
+build-locale:
+     [echo] Building pl_PL
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/pl_PL
+     [echo] Building pl_PL
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/pl_PL
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/pl_PL_resources.swf (24235 bytes)
+
+build-locale:
+     [echo] Building pt_BR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/pt_BR
+     [echo] Building pt_BR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/pt_BR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/pt_BR_resources.swf (24105 bytes)
+
+build-locale:
+     [echo] Building pt_PT
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/pt_PT
+     [echo] Building pt_PT
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/pt_PT
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/pt_PT_resources.swf (24117 bytes)
+
+build-locale:
+     [echo] Building ro_RO
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ro_RO
+     [echo] Building ro_RO
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ro_RO
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/ro_RO_resources.swf (23996 bytes)
+
+build-locale:
+     [echo] Building ru_RU
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ru_RU
+     [echo] Building ru_RU
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/ru_RU
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/ru_RU_resources.swf (24509 bytes)
+
+build-locale:
+     [echo] Building sv_SE
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/sv_SE
+     [echo] Building sv_SE
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/sv_SE
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/sv_SE_resources.swf (24477 bytes)
+
+build-locale:
+     [echo] Building sr_RS
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/sr_RS
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/sr_RS/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/sr_RS/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/sr_RS/rpc_rb.swc (9261 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/sr_RS/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/sr_RS/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/sr_RS/framework_rb.swc (14603 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/sr_RS/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/sr_RS/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/sr_RS/airframework_rb.swc (5604 bytes)
+     [echo] Building sr_RS
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/sr_RS
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/sr_RS_resources.swf (24223 bytes)
+
+build-locale:
+     [echo] Building sr_SR
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/sr_SR
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/sr_SR/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/sr_SR/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/sr_SR/rpc_rb.swc (9260 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/sr_SR/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/sr_SR/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/sr_SR/framework_rb.swc (14602 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/sr_SR/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/sr_SR/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/sr_SR/airframework_rb.swc (5608 bytes)
+     [echo] Building sr_SR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/sr_SR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/sr_SR_resources.swf (24230 bytes)
+
+build-locale:
+     [echo] Building th_TH
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/th_TH
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/th_TH/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/th_TH/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/th_TH/rpc_rb.swc (9266 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/th_TH/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/th_TH/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/th_TH/framework_rb.swc (14605 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/th_TH/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/th_TH/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/th_TH/airframework_rb.swc (5598 bytes)
+     [echo] Building th_TH
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/th_TH
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/th_TH_resources.swf (24439 bytes)
+
+build-locale:
+     [echo] Building tr_TR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/tr_TR
+     [echo] Building tr_TR
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/tr_TR
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/tr_TR_resources.swf (24177 bytes)
+
+build-locale:
+     [echo] Building vi_VN
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/vi_VN
+     [echo] Building vi_VN
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/vi_VN
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/vi_VN_resources.swf (24737 bytes)
+
+build-locale:
+     [echo] Building uk_UA
+     [echo] Need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/uk_UA
+     [exec] In Flex SDK at /home/firstuser/dev/tools/flex3 ...
+     [exec] 
+     [exec] Copying files from frameworks/projects/rpc/bundles/en_US/src
+     [exec]                 to frameworks/projects/rpc/bundles/uk_UA/src:
+     [exec] 
+     [exec] rpc.properties
+     [exec] messaging.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/uk_UA/rpc_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/uk_UA/rpc_rb.swc (9259 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/framework/bundles/en_US/src
+     [exec]                 to frameworks/projects/framework/bundles/uk_UA/src:
+     [exec] 
+     [exec] collections.properties
+     [exec] controls.properties
+     [exec] skins.properties
+     [exec] styles.properties
+     [exec] formatters.properties
+     [exec] SharedResources.properties
+     [exec] logging.properties
+     [exec] core.properties
+     [exec] containers.properties
+     [exec] states.properties
+     [exec] utils.properties
+     [exec] effects.properties
+     [exec] validators.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/uk_UA/framework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/uk_UA/framework_rb.swc (14607 bytes)
+     [exec] 
+     [exec] Copying files from frameworks/projects/airframework/bundles/en_US/src
+     [exec]                 to frameworks/projects/airframework/bundles/uk_UA/src:
+     [exec] 
+     [exec] aircontrols.properties
+     [exec] 
+     [exec] Compiling resource bundle SWC frameworks/locale/uk_UA/airframework_rb.swc:
+     [exec] 
+     [exec] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+     [exec] /home/firstuser/dev/tools/flex3/frameworks/locale/uk_UA/airframework_rb.swc (5606 bytes)
+     [echo] Building uk_UA
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/uk_UA
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/uk_UA_resources.swf (24565 bytes)
+
+build-locale:
+     [echo] Building zh_CN
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/zh_CN
+     [echo] Building zh_CN
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/zh_CN
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+OpenJDK Client VM warning: CodeCache is full. Compiler has been disabled.
+OpenJDK Client VM warning: Try increasing the code cache size using -XX:ReservedCodeCacheSize=
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/zh_CN_resources.swf (23982 bytes)
+
+build-locale:
+     [echo] Building zh_TW
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/zh_TW
+     [echo] Building zh_TW
+     [echo] No need to copy /home/firstuser/dev/tools/flex3/frameworks/locale/zh_TW
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/locale/zh_TW_resources.swf (23967 bytes)
+
+build-deskshare-no-linker:
+     [echo] Compiling deskshare without optimization.
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/DeskShareModule.swf (389148 bytes)
+
+build-deskshare-standalone:
+     [echo] Compiling deskshare standalone without optimization.
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/DeskshareStandalone.swf (394151 bytes)
+
+compile-deskshare-standalone:
+     [echo] Deskshare standalone built without optimization.
+
+build-bbb-main:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/BigBlueButton.swf (475558 bytes)
+     [echo] Copying common assets for BBB Main
+     [copy] Copying 42 files to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/org/bigbluebutton/common/assets/images
+
+build-chat:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/ChatModule.swf (125029 bytes)
+
+build-viewers:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/ViewersModule.swf (85534 bytes)
+
+build-listeners:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/ListenersModule.swf (50146 bytes)
+
+build-present:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/PresentModule.swf (101428 bytes)
+
+build-breakout:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/BreakoutModule.swf (32910 bytes)
+
+build-main-chat-viewers-listeners-present:
+
+build-deskshare:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/DeskShareModule.swf (52871 bytes)
+     [echo] Copying deskshare applet for Deskshare Module
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+
+build-phone:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/PhoneModule.swf (35645 bytes)
+     [echo] Copying assets for Phone Module
+     [copy] Copying 2 files to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/org/bigbluebutton/modules/phone/views/assets/images
+
+build-video:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/VideoconfModule.swf (39809 bytes)
+
+build-whiteboard:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/WhiteboardModule.swf (116853 bytes)
+
+build-dyn:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/DynamicInfoModule.swf (26082 bytes)
+
+build-classroom-audio:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/ClassroomAudioModule.swf (35700 bytes)
+
+build-settings:
+    [mxmlc] Loading configuration file /home/firstuser/dev/tools/flex3/frameworks/flex-config.xml
+    [mxmlc] /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/SettingsModule.swf (57778 bytes)
+
+build-deskshare-phone-video-whiteboard-dyn:
+
+copy-resource-files:
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/swfobject
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/conf
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/conf
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin
+     [echo] Copying config.xml for development environment
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/conf
+     [echo] Copying join-mock.xml for development environment
+     [copy] Copying 1 file to /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client/bin/conf
+
+compile-bbb:
+
+clean-build-all:
+
+BUILD SUCCESSFUL
+Total time: 4 minutes 15 seconds
+## Setting development environment for the apps
+# Checking if ~/dev/repo/bbb-common-message-0.7.jar is present
+# Copying bbb-common-message-0.7.jar into /home/firstuser/dev/source/bigbluebutton/bigbluebutton-apps
+Reading package lists...
+Building dependency tree...
+Reading state information...
+The following packages were automatically installed and are no longer required:
+  bbb-apps-sip jsvc freeswitch-sounds-en-us-callie-16000 freeswitch-lang-en
+  bbb-openoffice-headless red5 bbb-web activemq freeswitch odbcinst unixodbc
+  libcurl3 odbcinst1debian1 bbb-client bbb-apps-deskshare
+  libcommons-daemon-java freeswitch-sounds-music-16000 bbb-common
+  freeswitch-sounds-en-us-callie-8000 bbb-apps-video
+Use 'apt-get autoremove' to remove them.
+The following packages will be REMOVED:
+  bbb-apps* bbb-config* bbb-freeswitch-config* bigbluebutton*
+0 upgraded, 0 newly installed, 4 to remove and 0 not upgraded.
+After this operation, 15.3MB disk space will be freed.
+(Reading database ... (Reading database ... 5%(Reading database ... 10%(Reading database ... 15%(Reading database ... 20%(Reading database ... 25%(Reading database ... 30%(Reading database ... 35%(Reading database ... 40%(Reading database ... 45%(Reading database ... 50%(Reading database ... 55%(Reading database ... 60%(Reading database ... 65%(Reading database ... 70%(Reading database ... 75%(Reading database ... 80%(Reading database ... 85%(Reading database ... 90%(Reading database ... 95%(Reading database ... 100%(Reading database ... 35059 files and directories currently installed.)
+Removing bbb-freeswitch-config ...
+Removing bigbluebutton ...
+Removing bbb-config ...
+Purging configuration files for bbb-config ...
+Removing bbb-apps ...
+Purging configuration files for bbb-apps ...
+  No symbolic link in /etc/nginx/sites-enabled/bigbluebutton to /etc/nginx/sites-available/bigbluebutton 
+
+# Done.  To run your local build of bbb-apps:
+
+    sudo /etc/init.d/red5 stop
+    cd /home/firstuser/dev/source/bigbluebutton/bigbluebutton-apps
+    gradle war deploy
+    cd /usr/share/red5
+    sudo -u red5 ./red5.sh
+
+# To restore the packaged version of bbb-apps:
+
+    rm -rf /usr/share/red5/webapps/bigbluebutton
+    sudo apt-get install bigbluebutton
+    sudo /etc/init.d/red5 start
+
+## Stopping red5
+ * Stopping Red5 Server red5
+   ...done.
+## Compiling bigbluebutton-apps
+:compileJava
+downloading (4.50 MB) http://repo1.maven.org/maven2/org/codehaus/groovy/groovy-all/1.6.4/groovy-all-1.6.4.jar
+......................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (105 KB) http://repo1.maven.org/maven2/javax/servlet/servlet-api/2.5/servlet-api-2.5.jar
+....................................................................
+downloading (638 KB) http://repo1.maven.org/maven2/org/apache/mina/mina-core/2.0.0-RC1/mina-core-2.0.0-RC1.jar
+..........................................................................................................................................................................................................................................................................................................................................................................................
+downloading (29 KB) http://repo1.maven.org/maven2/org/apache/mina/mina-integration-spring/1.1.7/mina-integration-spring-1.1.7.jar
+...................
+downloading (359 KB) http://red5.googlecode.com/svn/repository/spring/spring-web-3.0.0.jar
+...........................................................................................................................................................................................................................
+downloading (4 KB) http://repo1.maven.org/maven2/aopalliance/aopalliance/1.0/aopalliance-1.0.jar
+...
+downloading (551 KB) http://red5.googlecode.com/svn/repository/spring/spring-beans-3.0.0.jar
+.........................................................................................................................................................................................................................................................................................................................................................
+downloading (324 KB) http://red5.googlecode.com/svn/repository/spring/spring-aop-3.0.0.jar
+............................................................................................................................................................................................................
+downloading (657 KB) http://red5.googlecode.com/svn/repository/spring/spring-context-3.0.0.jar
+.....................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (359 KB) http://red5.googlecode.com/svn/repository/spring/spring-core-3.0.0.jar
+..........................................................................................................................................................................................................................
+downloading (983 KB) http://blindside.googlecode.com/svn/repository/org/red5/red5-0.91.jar
+.............................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (258 KB) http://red5.googlecode.com/svn/repository/logback-core-0.9.18.jar
+......................................................................................................................................................
+downloading (170 KB) http://red5.googlecode.com/svn/repository/logback-classic-0.9.18.jar
+....................................................................................................
+downloading (23 KB) http://red5.googlecode.com/svn/repository/slf4j-api-1.5.10.jar
+.................
+downloading (17 KB) http://red5.googlecode.com/svn/repository/jcl-over-slf4j-1.5.10.jar
+...........
+downloading (11 KB) http://red5.googlecode.com/svn/repository/log4j-over-slf4j-1.5.10.jar
+........
+downloading (2 KB) http://repo1.maven.org/maven2/net/jcip/jcip-annotations/1.0/jcip-annotations-1.0.jar
+..
+downloading (2.32 MB) http://repo1.maven.org/maven2/org/apache/activemq/activemq-core/5.1.0/activemq-core-5.1.0.jar
+...................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (16 KB) http://blindside.googlecode.com/svn/repository/org/apache/geronimo/geronimo-j2ee-management_1.0_spec-1.0.jar
+.........
+downloading (28 KB) http://blindside.googlecode.com/svn/repository/org/apache/geronimo/geronimo-jms_1.1_spec-1.0.jar
+..................
+downloading (473 KB) http://repo1.maven.org/maven2/org/asteriskjava/asterisk-java/1.0.0.M3/asterisk-java-1.0.0.M3.jar
+.............................................................................................................................................................................................................................................................................................
+downloading (45 KB) http://blindside.googlecode.com/svn/repository/org/freeswitch/org.freeswitch.esl.client-0.9.0-SNAPSHOT.jar
+......................
+downloading (699 KB) http://repo1.maven.org/maven2/org/jboss/netty/netty/3.1.5.GA/netty-3.1.5.GA.jar
+..............................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (231 KB) http://red5.googlecode.com/svn/repository/spring/spring-tx-2.5.6.jar
+...................................................................................................................................
+downloading (184 KB) http://red5.googlecode.com/svn/repository/spring/spring-jms-3.0.0.jar
+................................................................................................................
+downloading (389 KB) http://blindside.googlecode.com/svn/repository/org/spring/integration/spring-integration-core-2.0.0.M2.jar
+........................................................................................................................................................................................................................................
+downloading (7 KB) http://blindside.googlecode.com/svn/repository/org/spring/integration/spring-integration-adapter-2.0.0.M2.jar
+.....
+downloading (14 KB) http://blindside.googlecode.com/svn/repository/org/spring/integration/spring-integration-stream-2.0.0.M2.jar
+.........
+downloading (44 KB) http://blindside.googlecode.com/svn/repository/org/spring/integration/spring-integration-file-2.0.0.M2.jar
+.............................
+downloading (41 KB) http://blindside.googlecode.com/svn/repository/org/spring/integration/spring-integration-jms-2.0.0.M2.jar
+.............................
+downloading (59 KB) http://blindside.googlecode.com/svn/repository/org/ho/jyaml-1.3.jar
+.....................................
+downloading (3.79 MB) http://repo1.maven.org/maven2/org/scala-lang/scala-library/2.7.7/scala-library-2.7.7.jar
+.........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+:compileGroovy
+:defineScalaAnt
+downloading (6.36 MB) http://repo1.maven.org/maven2/org/scala-lang/scala-compiler/2.7.7/scala-compiler-2.7.7.jar
+.................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+:compileScala
+:processResources
+:classes
+:war
+:deploy
+Deleting /usr/share/red5/webapps/bigbluebutton
+
+BUILD SUCCESSFUL
+
+Total time: 1 mins 44.854 secs
+## Compiling bbb-voice
+:compileJava
+downloading (9 KB) http://red5.googlecode.com/svn/repository/log4j-over-slf4j-1.5.6.jar
+..
+downloading (230 KB) http://red5.googlecode.com/svn/repository/logback-core-0.9.14.jar
+...........................................................................................................................................
+downloading (155 KB) http://red5.googlecode.com/svn/repository/logback-classic-0.9.14.jar
+........................................................................................
+downloading (22 KB) http://red5.googlecode.com/svn/repository/slf4j-api-1.5.6.jar
+...............
+downloading (1.90 MB) http://blindside.googlecode.com/svn/repository/javax/media/jmf-2.1.1e.jar
+..........................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (843 KB) http://blindside.googlecode.com/svn/repository/org/testng/testng-5.8.jar
+................................................................................................................................................................................................................................................................................................................................................................................................................................................................................................
+downloading (81 KB) http://repo1.maven.org/maven2/org/easymock/easymock/2.4/easymock-2.4.jar
+........................
+:processResources
+:classes
+:war
+:deploy
+Deleting /usr/share/red5/webapps/sip
+
+BUILD SUCCESSFUL
+
+Total time: 25.303 secs
+## Downloading the mobile demo
+Doing a clean restart of BigBlueButton ...
+ * Stopping Red5 Server red5
+   ...done.
+ * Stopping Tomcat servlet engine tomcat6
+   ...done.
+Stopping nginx: nginx.
+ * Stopping Apache ActiveMQ service activemq
+   ...done.
+Stopping OpenOffice headless server.
+
+Cleaning Log Files ...
+ * Apache ActiveMQ service is not running.
+ * could not access PID file for nginx
+ * Red5 Server is not running.
+ * Tomcat servlet engine is not running.
+
+Starting FreeSWITCH
+ * Starting Apache ActiveMQ service activemq
+   ...done.
+Waiting for ActiveMQ to start: 
+Waiting for FreeSWITCH to start: .............
+Starting OpenOffice headless server
+Starting nginx: nginx.
+ * Starting Red5 Server red5
+
+   ...done.
+ * Starting Tomcat servlet engine tomcat6
+   ...done.
+Waiting for BigBlueButton to finish starting up (this may take a minute):  done
+
+
+** Potential problems described below **
+# Nginx: serving client from /home/firstuser/dev/source/bigbluebutton/bigbluebutton-client
+#          instead of the usual /var/www/bigbluebutton
+
+# You don't have either bbb-freeswitch-config or bbb-voice-conference
+# installed.  Install one of these packages, then run sudo bbb-conf --clean
+
