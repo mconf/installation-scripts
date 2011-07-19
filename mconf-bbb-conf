@@ -1,11 +1,10 @@
 #!/bin/bash
 
 ##
-## To execute this script, run:
-##
-## rm -f mconf-bbb-conf; wget https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf; chmod a+x mconf-bbb-conf; ./mconf-bbb-conf
-##
 ## Usage: mconf-bbb-conf [IP:PORT]
+##
+## Common sequence of commands:
+## sudo dhclient; rm -f mconf-bbb-conf; wget https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf; chmod a+x mconf-bbb-conf; ./mconf-bbb-conf
 ##
 
 HOME=/home/firstuser
@@ -58,7 +57,7 @@ then
 fi
 source $HOME/.profile > /dev/null
 
-echo '## Setting development environment for the client'
+echo '## Setting development environment for the bigbluebutton-client'
 bbb-conf --setup-dev client
 cd $BBB_SOURCE/bigbluebutton-client
 echo '## Configuring the config.xml on the client'
@@ -73,7 +72,7 @@ sed -i ':a;N;$!ba;s/\(<module name="SettingsModule"[^>]*\/>\)/<!--\1-->/g' src/c
 echo '## Compiling the client'
 ant
 
-echo '## Setting development environment for the apps'
+echo '## Setting development environment for the bigbluebutton-apps'
 bbb-conf --setup-dev apps
 echo '## Stopping red5'
 sudo service red5 stop
@@ -89,10 +88,23 @@ sudo sed -i "s/outbound_codec_prefs=PCMU,G722,PCMA,GSM/outbound_codec_prefs=spee
 #http://code.google.com/p/bigbluebutton/wiki/FAQ#When_I_click_on_the_headset_icon,_nothing_happens?
 sudo sed -i "s/sip\.server\.host=.*/sip.server.host=$HOST/g" /usr/share/red5/webapps/sip/WEB-INF/bigbluebutton-sip.properties
 
+echo '## Setting development environment for the bigbluebutton-web'
+bbb-conf --setup-dev web
+sudo service tomcat6 stop
+cd $BBB_SOURCE/bigbluebutton-web
+rm -f *.war
+grails war
+SERVLET_DIR=/var/lib/tomcat6/webapps
+SALT=$(cat $SERVLET_DIR/bigbluebutton/WEB-INF/classes/bigbluebutton.properties | grep securitySalt | cut -d= -f2);
+sudo rm -rf $SERVLET_DIR/bigbluebutton/ $SERVLET_DIR/bigbluebutton.war
+sudo cp bigbluebutton-*.war $SERVLET_DIR/bigbluebutton.war
+sudo service tomcat6 start
+sudo bbb-conf --setsalt $SALT
+sudo bbb-conf --setip $HOST:$PORT
+
 echo '## Downloading the mobile demo'
+cd $HOME
 wget https://raw.github.com/mconf/mconf-mobile/master/mobile.jsp
 sudo mv mobile.jsp /var/lib/tomcat6/webapps/bigbluebutton/demo/
 
 sudo bbb-conf --clean
-
-exit 0
