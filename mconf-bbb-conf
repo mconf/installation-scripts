@@ -1,5 +1,11 @@
 #!/bin/bash
 
+##
+## To execute this script, run:
+##
+## wget https://raw.github.com/mconf/installation-scripts/master/mconf-bbb-conf; chmod a+x mconf-bbb-conf; ./mconf-bbb-conf
+##
+
 BBB_SOURCE=~/dev/source/bigbluebutton
 MCONF_REPOS=git://github.com/mconf/bigbluebutton.git
 
@@ -27,10 +33,6 @@ else
     cd $BBB_SOURCE; git pull origin master; cd ~
 fi
 
-#sudo apt-get -y install python-software-properties 
-#sudo add-apt-repository ppa:freeswitch-drivers/freeswitch-nightly-drivers
-#sudo apt-get update
-#sudo apt-get -y install bbb-freeswitch-config
 sudo apt-get -y install ant
 
 echo '## Adding FLAT_REPO environment variable'
@@ -52,7 +54,7 @@ sudo cp resources/config.xml.template /var/www/bigbluebutton/client/conf/config.
 echo '## Setting IP on BigBlueButton'
 sudo bbb-conf --setip $HOST:$PORT
 sudo cp /var/www/bigbluebutton/client/conf/config.xml src/conf/config.xml
-sed -i "s/showDebugWindow=\"false\"/showDebugWindow=\"true\"/g" src/conf/config.xml
+#sed -i "s/showDebugWindow=\"false\"/showDebugWindow=\"true\"/g" src/conf/config.xml
 sed -i "s/<version>VERSION<\/version>/<version> - Mconf Test Server<\/version>/g" src/conf/config.xml
 sed -i "s/VERSION/3818/g" src/conf/config.xml
 sed -i ':a;N;$!ba;s/\(<module name="SettingsModule"[^>]*\/>\)/<!--\1-->/g' src/conf/config.xml
