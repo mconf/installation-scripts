@@ -37,6 +37,8 @@ sudo bbb-conf --setip $IP:$BBB_PORT
 # Mconf-Wweb configurations. Need user input.
 mconf-web-conf --setup-vm $IP $BBB_PORT
 
+sudo /etc/init.d/nginx restart
+
 echo
 echo "*******************************************************************************"
 echo "  Mconf VM setup complete."
