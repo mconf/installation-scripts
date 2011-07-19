@@ -27,10 +27,10 @@ else
     cd $BBB_SOURCE; git pull origin master; cd ~
 fi
 
-sudo apt-get -y install python-software-properties 
-sudo add-apt-repository ppa:freeswitch-drivers/freeswitch-nightly-drivers
-sudo apt-get update
-sudo apt-get -y install bbb-freeswitch-config
+#sudo apt-get -y install python-software-properties 
+#sudo add-apt-repository ppa:freeswitch-drivers/freeswitch-nightly-drivers
+#sudo apt-get update
+#sudo apt-get -y install bbb-freeswitch-config
 sudo apt-get -y install ant
 
 echo '## Adding FLAT_REPO environment variable'
@@ -41,17 +41,19 @@ fi
 source ~/.profile > /dev/null
 
 ## http://bash.cyberciti.biz/misc-shell/read-local-ip-address/
-IP=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
+HOST=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 PORT=8888
-echo '## Setting IP on BigBlueButton'
-sudo bbb-conf --setip $IP:$PORT
 
 echo '## Setting development environment for the client'
 bbb-conf --setup-dev client
 cd $BBB_SOURCE/bigbluebutton-client
 echo '## Configuring the config.xml on the client'
-cp resources/config.xml.template src/conf/config.xml
-sed -i "s/HOST/$IP/g" src/conf/config.xml
+sudo cp resources/config.xml.template /var/www/bigbluebutton/client/conf/config.xml
+echo '## Setting IP on BigBlueButton'
+sudo bbb-conf --setip $HOST:$PORT
+sudo cp /var/www/bigbluebutton/client/conf/config.xml src/conf/config.xml
+sed -i "s/showDebugWindow=\"false\"/showDebugWindow=\"true\"/g" src/conf/config.xml
+sed -i "s/<version>VERSION<\/version>/<version> - Mconf Test Server<\/version>/g" src/conf/config.xml
 sed -i "s/VERSION/3818/g" src/conf/config.xml
 echo '## Compiling the client'
 ant
@@ -69,6 +71,8 @@ echo '## Compiling bbb-voice'
 gradle war deploy
 sudo sed -i "s/global_codec_prefs=PCMU,G722,PCMA,GSM/global_codec_prefs=speex@16000h@20i,speex@8000h@20i,G7221@32000h,G7221@16000h,G722,PCMU,PCMA,GSM/g" /opt/freeswitch/conf/vars.xml
 sudo sed -i "s/outbound_codec_prefs=PCMU,G722,PCMA,GSM/outbound_codec_prefs=speex@16000h@20i,PCMU,PCMA,GSM/g" /opt/freeswitch/conf/vars.xml
+#http://code.google.com/p/bigbluebutton/wiki/FAQ#When_I_click_on_the_headset_icon,_nothing_happens?
+sudo sed -i "s/sip\.server\.host=.*/sip.server.host=$HOST/g" /usr/share/red5/webapps/sip/WEB-INF/bigbluebutton-sip.properties
 
 echo '## Downloading the mobile demo'
 wget https://raw.github.com/mconf/mconf-mobile/master/mobile.jsp
