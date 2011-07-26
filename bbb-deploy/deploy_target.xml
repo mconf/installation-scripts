@@ -1,0 +1,37 @@
+<project name="BigBlueButton Deploy - Target" default="deploy" basedir=".">
+
+    <property file="default.properties"/>
+    <property file="private.properties"/>
+
+    <target name="properties">
+        <echoproperties />
+    </target>
+
+    <target name="backup">
+        <tstamp>
+            <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
+        </tstamp>
+        <property name="backup.dir" location="backup-${TSTAMP}" />
+        <property name="backup.client.dir" location="${backup.dir}/${name.client}" />
+        <mkdir dir="${backup.client.dir}" />
+        <copy toDir="${backup.client.dir}">
+            <fileset dir="${deploy.client}" />
+        </copy>
+        
+    </target>
+
+    <target name="restore">
+        <exec executable="${basedir}/last_backup" outputproperty="last_backup" />
+        <copy toDir="${deploy.client}">
+            <fileset dir="${last_backup}/${name.client}" />
+        </copy>
+    </target>
+
+    <target name="deploy" depends="backup">
+        <unzip src="${basedir}/bigbluebutton.zip"
+                dest="bigbluebutton" />
+        <!--<copy toDir="${deploy.client}">
+            <fileset dir="bigbluebutton/${name.client}" />
+        </copy>-->
+    </target>
+</project>
