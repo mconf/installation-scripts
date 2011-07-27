@@ -1,0 +1,17 @@
+## Local
+
+ant -f deploy_local.xml -lib lib/
+
+## Remote
+
+sudo ant -f deploy_target.xml
+sudo bbb-conf --setip <IP>
+
+\todo
+
+# The voice application failed to register with the sip server.
+#   Try running: sudo bbb-conf --clean
+
+# The IP address (143.54.12.10) set for sip.server.host in
+#    /usr/share/red5/webapps/sip/WEB-INF/bigbluebutton-sip.properties
+# does not match the local IP address (143.54.12.113). 

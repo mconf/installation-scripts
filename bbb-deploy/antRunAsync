@@ -11,6 +11,9 @@
 #   <arg value="real executable" />
 # </exec
 
+ANTRUN_NOHUP=true
+ANTRUN_OUTPUT=ant.log
+
 # If ANTRUN_NOHUP environment variable is set to true/yes/nohup, run the
 # executable prefixed with "nohup" making it immune to logging out.
 case "$ANTRUN_NOHUP" in

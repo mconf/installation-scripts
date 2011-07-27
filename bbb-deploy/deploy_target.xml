@@ -30,8 +30,8 @@
     <target name="deploy" depends="backup">
         <unzip src="${basedir}/bigbluebutton.zip"
                 dest="bigbluebutton" />
-        <!--<copy toDir="${deploy.client}">
+        <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="bigbluebutton/${name.client}" />
-        </copy>-->
+        </copy>
     </target>
 </project>

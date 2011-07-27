@@ -7,6 +7,29 @@
         <echoproperties />
     </target>
 
+    <target name="userpass">
+        <if>
+            <isset property="username"/>
+            <then>
+                <echo message="username:> ${username}" />
+            </then>
+            <else>
+                <input message="username:> " addproperty="username" />
+            </else>
+        </if>
+        <if>
+            <isset property="password"/>
+            <then>    
+                <echo message="password:> ****" />
+            </then>
+            <else>
+                <input message="password:> " addproperty="password">
+                    <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+                </input>
+            </else>
+        </if>
+    </target>
+
     <target name="deploy">
         <delete dir="${deploy.local.dir}" />
         <mkdir dir="${deploy.local.dir}" />
@@ -28,7 +51,8 @@
                 username="${target.username}"
                 password="${target.password}"
                 command="mkdir ${deploy.target.dir}"
-                failonerror="false"/>
+                failonerror="false"
+                trust="true"/>
         <scp todir="${target.username}@${target.host}:~/${deploy.target.dir}" 
                 password="${target.password}" trust="yes">
             <fileset dir="${deploy.local.dir}" />
