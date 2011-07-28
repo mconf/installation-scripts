@@ -1,12 +1,27 @@
-<project name="BigBlueButton Deploy - Target" default="deploy" basedir=".">
+<project name="BigBlueButton Deploy - Target" default="init" basedir=".">
 
     <property file="default.properties"/>
-    <property file="private.properties"/>
 
     <target name="properties">
         <echoproperties />
     </target>
+    
+    <target name="init">
+        <echo message="target.ip.expression=${target.ip.expression}" />
+        <exec executable="bash" outputproperty="target.ip">
+            <arg value="-c" />
+            <arg value="${target.ip.expression}" />
+        </exec>
+        <echo message="target.ip=${target.ip}" />
 
+        <exec executable="bash" outputproperty="last_backup">
+            <arg value="-c" />
+            <arg value="find -name 'backup-*' | sort -r | head -1" />
+        </exec>
+        <echo message="last backup=${last_backup}" />
+        
+    </target>
+    
     <target name="backup">
         <tstamp>
             <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
@@ -20,18 +35,28 @@
         
     </target>
 
-    <target name="restore">
-        <exec executable="${basedir}/last_backup" outputproperty="last_backup" />
-        <copy toDir="${deploy.client}">
+    <target name="restore" depends="init">
+        <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="${last_backup}/${name.client}" />
         </copy>
+        <antcall target="finalize" />
     </target>
 
-    <target name="deploy" depends="backup">
+    <target name="deploy" depends="init, backup">
         <unzip src="${basedir}/bigbluebutton.zip"
                 dest="bigbluebutton" />
         <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="bigbluebutton/${name.client}" />
         </copy>
+        <antcall target="finalize" />
+    </target>
+    
+    <target name="finalize">
+        <exec executable="/usr/local/bin/bbb-conf">
+            <arg line="--setip ${target.ip}" />
+        </exec>
+        <exec executable="/usr/local/bin/bbb-conf">
+            <arg line="--clean" />
+        </exec>
     </target>
 </project>

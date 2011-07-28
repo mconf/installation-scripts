@@ -8,26 +8,11 @@
     </target>
 
     <target name="userpass">
-        <if>
-            <isset property="username"/>
-            <then>
-                <echo message="username:> ${username}" />
-            </then>
-            <else>
-                <input message="username:> " addproperty="username" />
-            </else>
-        </if>
-        <if>
-            <isset property="password"/>
-            <then>    
-                <echo message="password:> ****" />
-            </then>
-            <else>
-                <input message="password:> " addproperty="password">
-                    <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
-                </input>
-            </else>
-        </if>
+        <input message="host     > " addproperty="target.host" />
+        <input message="username > " addproperty="target.username" />
+        <input message="password > " addproperty="target.password" >
+            <handler classname="org.apache.tools.ant.input.SecureInputHandler" />
+        </input>
     </target>
 
     <target name="deploy">
@@ -43,7 +28,6 @@
             <fileset dir="${basedir}">
                 <include name="deploy_target.xml" />
                 <include name="default.properties" />
-                <include name="last_backup" />
             </fileset>
         </copy>
         
@@ -57,39 +41,10 @@
                 password="${target.password}" trust="yes">
             <fileset dir="${deploy.local.dir}" />
         </scp>
-        
-        <!--<exec executable="${basedir}/antRunAsync" failonerror="true">
-            <env key="ANTRUN_NOHUP" value="false" />
-            <env key="ANTRUN_OUTPUT" value="teste.log" />
-            <arg value="${basedir}/remote_deploy" />
-            <arg value="${target.username}@${target.host}" />
-            <arg value="${deploy.target.dir}" />
-        </exec>-->
-
-        <!--<sshexec host="${target.host}"
+        <sshexec host="${target.host}"
                 username="${target.username}"
                 password="${target.password}"
-                command="cd ${deploy.target.dir}; ant -f deploy_target.xml"/>-->
-
-        <!--<sshexec host="${target.host}"
-                username="${target.username}"
-                password="${target.password}"
-                command="cd ${deploy.target.dir}; ant -f deploy_target.xml"/>-->
-                
-        <!--<exec executable="${basedir}/antRunAsync" failonerror="true">
-            <env key="ANTRUN_NOHUP" value="true" />
-            <env key="ANTRUN_OUTPUT" value="teste.log" />
-            <arg value="ssh" />
-            <arg value="-t" />
-            <arg value="${target.username}@${target.host}" />
-            <arg value="'sudo ant -f /home/firstuser/${deploy.target.dir}/deploy_target.xml'" />
-        </exec>-->
-        
-        <!--<exec executable="/usr/bin/ssh" failonerror="false">
-            <arg value="-t" />
-            <arg value="${target.username}@${target.host}" />
-            <arg value="'cd ${deploy.target.dir}; ant -f deploy_target.xml'" />
-        </exec>-->
-        
+                trust="true"
+                command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S ant -f deploy_target.xml"/>
     </target>
 </project>

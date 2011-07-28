@@ -2,11 +2,6 @@
 
 ant -f deploy_local.xml -lib lib/
 
-## Remote
-
-sudo ant -f deploy_target.xml
-sudo bbb-conf --setip <IP>
-
 \todo
 
 # The voice application failed to register with the sip server.
