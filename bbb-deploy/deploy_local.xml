@@ -7,6 +7,16 @@
         <echoproperties />
     </target>
 
+
+    <target name="init">
+        <tstamp>
+            <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
+        </tstamp>
+
+        <delete dir="${deploy.local.dir}" />
+        <mkdir dir="${deploy.local.dir}" />
+    </target>
+
     <target name="userpass">
         <input message="host     > " addproperty="target.host" />
         <input message="username > " addproperty="target.username" />
@@ -15,9 +25,10 @@
         </input>
     </target>
 
-    <target name="deploy">
-        <delete dir="${deploy.local.dir}" />
-        <mkdir dir="${deploy.local.dir}" />
+    <target name="restore" depends="init">
+    </target>
+
+    <target name="deploy" depends="init">
         <zip destfile="${deploy.local.dir}/bigbluebutton.zip">
             <zipfileset dir="${build.client}" prefix="${name.client}"/>
             <!--<zipfileset dir="${build.apps}" prefix="${name.apps}"/>

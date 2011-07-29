@@ -7,27 +7,23 @@
     </target>
     
     <target name="init">
+        <tstamp>
+            <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
+        </tstamp>
+
         <exec executable="bash" outputproperty="target.ip">
             <arg value="-c" />
             <arg value="${target.ip.expression}" />
         </exec>
-        <echo message="target.ip=${target.ip}" />
+        <echo message="Current BigBlueButton IP and port is ${target.ip}" />
 
-        <exec executable="bash" outputproperty="last_backup">
-            <arg value="-c" />
-            <arg value="find -name 'backup-*' | sort -r | head -1" />
-        </exec>
-        <echo message="last backup=${last_backup}" />
-        
+        <echo message="Stopping BigBlueButton server" />
         <exec executable="/usr/local/bin/bbb-conf">
             <arg line="--stop" />
         </exec>
     </target>
     
     <target name="backup">
-        <tstamp>
-            <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
-        </tstamp>
         <property name="backup.dir" location="backup-${TSTAMP}" />
         <property name="backup.client.dir" location="${backup.dir}/${name.client}" />
         <mkdir dir="${backup.client.dir}" />
@@ -37,6 +33,12 @@
     </target>
 
     <target name="restore" depends="init">
+        <exec executable="bash" outputproperty="last_backup">
+            <arg value="-c" />
+            <arg value="find -name 'backup-*' | sort -r | head -1" />
+        </exec>
+        <echo message="Last backup folder is ${last_backup}" />
+
         <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="${last_backup}/${name.client}" />
         </copy>
@@ -49,6 +51,33 @@
         <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="bigbluebutton/${name.client}" />
         </copy>
+        
+        <!--            
+        character   reference
+        <   &lt;
+        >   &gt;
+        "   &quot;
+        &   &amp;
+        '   &apos;
+        -->            
+        <property name="version" value="${TSTAMP}" />
+        <echo message="Module version is ${version}" />
+        <exec executable="bash">
+            <arg value="-c" />
+            <!--
+            sed -i 's:\(?v=\)\([^"]*\):\1${version}:g' ${deploy.client}/conf/config.xml
+            -->
+            <arg value="sed -i &apos;s:\(?v=\)\([^&quot;]*\):\1${version}:g&apos; ${deploy.client}/conf/config.xml" />
+        </exec>
+        
+        <exec executable="bash">
+            <arg value="-c" />
+            <!--
+            sed -i 's:<version>.*<\/version>:<version> - Mconf Server<\/version>:g' ${deploy.client}/conf/config.xml
+            -->
+            <arg value="sed -i &apos;s:&lt;version&gt;.*&lt;\/version&gt;:&lt;version&gt; - Mconf Server&lt;\/version&gt;:g&apos; ${deploy.client}/conf/config.xml" />
+        </exec>
+
         <antcall target="finalize" />
     </target>
     
