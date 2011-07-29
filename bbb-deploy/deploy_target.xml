@@ -1,4 +1,4 @@
-<project name="BigBlueButton Deploy - Target" default="init" basedir=".">
+<project name="BigBlueButton Deploy - Target" default="deploy" basedir=".">
 
     <property file="default.properties"/>
 
@@ -7,7 +7,6 @@
     </target>
     
     <target name="init">
-        <echo message="target.ip.expression=${target.ip.expression}" />
         <exec executable="bash" outputproperty="target.ip">
             <arg value="-c" />
             <arg value="${target.ip.expression}" />
@@ -20,6 +19,9 @@
         </exec>
         <echo message="last backup=${last_backup}" />
         
+        <exec executable="/usr/local/bin/bbb-conf">
+            <arg line="--stop" />
+        </exec>
     </target>
     
     <target name="backup">
@@ -32,7 +34,6 @@
         <copy toDir="${backup.client.dir}">
             <fileset dir="${deploy.client}" />
         </copy>
-        
     </target>
 
     <target name="restore" depends="init">
