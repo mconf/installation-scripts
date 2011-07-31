@@ -1,4 +1,4 @@
-<project name="BigBlueButton Deploy - Local" default="deploy" basedir=".">
+<project name="BigBlueButton Deploy - Local" basedir=".">
 
     <property file="default.properties"/>
     <property file="private.properties"/>
@@ -6,7 +6,6 @@
     <target name="properties">
         <echoproperties />
     </target>
-
 
     <target name="init">
         <tstamp>
@@ -25,7 +24,41 @@
         </input>
     </target>
 
+    <macrodef name="remote">
+        <attribute name="target"/>
+        <sequential>
+            <copy toDir="${deploy.local.dir}">
+                <fileset dir="${basedir}">
+                    <include name="deploy_target.xml" />
+                    <include name="default.properties" />
+                </fileset>
+            </copy>
+            
+            <sshexec host="${target.host}"
+                    username="${target.username}"
+                    password="${target.password}"
+                    command="mkdir ${deploy.target.dir}"
+                    failonerror="false"
+                    trust="true"/>
+            <scp todir="${target.username}@${target.host}:~/${deploy.target.dir}" 
+                    password="${target.password}" trust="yes">
+                <fileset dir="${deploy.local.dir}" />
+            </scp>
+            <!--<sshexec host="${target.host}"
+                    username="${target.username}"
+                    password="${target.password}"
+                    trust="true"
+                    command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S ant -f deploy_target.xml @{target}"/>-->
+            <sshexec host="${target.host}"
+                    username="${target.username}"
+                    password="${target.password}"
+                    trust="true"
+                    command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S apt-get -y install ant; sudo ant -f deploy_target.xml @{target}"/>
+        </sequential>
+    </macrodef>
+
     <target name="restore" depends="init">
+        <remote target="restore" />
     </target>
 
     <target name="deploy" depends="init">
@@ -35,27 +68,7 @@
             <zipfileset dir="${build.voice}" prefix="${name.voice}"/>
             <zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}"/>-->
         </zip>
-        <copy toDir="${deploy.local.dir}">
-            <fileset dir="${basedir}">
-                <include name="deploy_target.xml" />
-                <include name="default.properties" />
-            </fileset>
-        </copy>
         
-        <sshexec host="${target.host}"
-                username="${target.username}"
-                password="${target.password}"
-                command="mkdir ${deploy.target.dir}"
-                failonerror="false"
-                trust="true"/>
-        <scp todir="${target.username}@${target.host}:~/${deploy.target.dir}" 
-                password="${target.password}" trust="yes">
-            <fileset dir="${deploy.local.dir}" />
-        </scp>
-        <sshexec host="${target.host}"
-                username="${target.username}"
-                password="${target.password}"
-                trust="true"
-                command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S ant -f deploy_target.xml"/>
+        <remote target="deploy"/>
     </target>
 </project>
