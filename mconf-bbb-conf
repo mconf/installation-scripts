@@ -10,6 +10,7 @@
 HOME=/home/firstuser
 BBB_SOURCE=$HOME/dev/source/bigbluebutton
 MCONF_REPOS=git://github.com/mconf/bigbluebutton.git
+MCONF_BRANCH=current
 ## http://bash.cyberciti.biz/misc-shell/read-local-ip-address/
 HOST=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 PORT=8888
@@ -31,8 +32,11 @@ then
     echo '# Installing and configuring Mconf BigBlueButton server #'
     echo '#########################################################'
 
-    echo '## Cloning the mconf repository'
+    echo '## Cloning the Mconf repository'
     bbb-conf --checkout $MCONF_REPOS
+    cd $BBB_SOURCE
+    git fetch origin $MCONF_BRANCH:$MCONF_BRANCH
+    git checkout $MCONF_BRANCH
 else
     echo '#######################################'
     echo '# Updating Mconf BigBlueButton server #'
@@ -45,9 +49,16 @@ else
     fi
 
     echo '## Updating the mconf repository'
-    cd $BBB_SOURCE; git pull origin master; cd $HOME
+    cd $BBB_SOURCE
+    if [ `git branch | grep "^[ \*] $MCONF_BRANCH$" | wc -l` -eq 0 ]
+    then
+        git fetch origin $MCONF_BRANCH:$MCONF_BRANCH
+    fi
+    git checkout $MCONF_BRANCH
+    git pull origin $MCONF_BRANCH
 fi
 
+sudo apt-get update
 sudo apt-get -y install ant
 
 echo '## Adding FLAT_REPO environment variable'
@@ -92,6 +103,8 @@ echo '## Setting development environment for the bigbluebutton-web'
 bbb-conf --setup-dev web
 sudo service tomcat6 stop
 cd $BBB_SOURCE/bigbluebutton-web
+echo '## Downloading the mobile demo'
+wget -P web-app/demo/ https://raw.github.com/mconf/mconf-mobile/master/mobile.jsp
 rm -f *.war
 grails war
 SERVLET_DIR=/var/lib/tomcat6/webapps
@@ -101,10 +114,5 @@ sudo cp bigbluebutton-*.war $SERVLET_DIR/bigbluebutton.war
 sudo service tomcat6 start
 sudo bbb-conf --setsalt $SALT
 sudo bbb-conf --setip $HOST:$PORT
-
-echo '## Downloading the mobile demo'
-cd $HOME
-wget https://raw.github.com/mconf/mconf-mobile/master/mobile.jsp
-sudo mv mobile.jsp /var/lib/tomcat6/webapps/bigbluebutton/demo/
 
 sudo bbb-conf --clean
