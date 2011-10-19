@@ -8,7 +8,7 @@
 #
 # You can find this file at: https://github.com/mconf/installation-scripts
 
-MCONF_VM_VERSION=0.1    # Mconf VM version
+MCONF_VM_VERSION=0.2    # Mconf VM version
 BBB_PORT=8888           # Port for BigBlueButton
 
 echo
@@ -36,14 +36,8 @@ fi
 # Configures our customizations over BBB
 mconf-bbb-conf $IP:$BBB_PORT
 
-# Configures BBB in a different IP:port
-#sudo bbb-conf --setip $IP:$BBB_PORT
-
 # Mconf-Web configurations. Needs user input.
-mconf-web-conf --setup-vm $IP $BBB_PORT
-
-# we have to restart nginx b/c mconf-web-conf alters its configuration files
-sudo /etc/init.d/nginx restart
+mconf-web-vm-conf -a $IP -p $BBB_PORT
 
 echo
 echo "*******************************************************************************"
