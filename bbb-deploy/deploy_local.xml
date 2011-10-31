@@ -7,7 +7,7 @@
         <echoproperties />
     </target>
 
-    <target name="init">
+    <target name="init" depends="userpass">
         <tstamp>
             <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
         </tstamp>
@@ -34,12 +34,13 @@
                 </fileset>
             </copy>
             
+            <echo message="Creating folder ${deploy.target.dir}" />
             <sshexec host="${target.host}"
                     username="${target.username}"
                     password="${target.password}"
-                    command="mkdir ${deploy.target.dir}"
-                    failonerror="false"
+                    command="if [ ! -d &quot;${deploy.target.dir}&quot; ]; then mkdir ${deploy.target.dir}; fi"
                     trust="true"/>
+            <echo message="Copying files to remote host" />
             <scp todir="${target.username}@${target.host}:~/${deploy.target.dir}" 
                     password="${target.password}" trust="yes">
                 <fileset dir="${deploy.local.dir}" />
@@ -49,6 +50,7 @@
                     password="${target.password}"
                     trust="true"
                     command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S ant -f deploy_target.xml @{target}"/>-->
+            <echo message="Executing remote host task" />
             <sshexec host="${target.host}"
                     username="${target.username}"
                     password="${target.password}"
@@ -64,9 +66,9 @@
     <target name="deploy" depends="init">
         <zip destfile="${deploy.local.dir}/bigbluebutton.zip">
             <zipfileset dir="${build.client}" prefix="${name.client}"/>
-            <!--<zipfileset dir="${build.apps}" prefix="${name.apps}"/>
-            <zipfileset dir="${build.voice}" prefix="${name.voice}"/>
-            <zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}"/>-->
+            <!--zipfileset dir="${build.apps}" prefix="${name.apps}"/>
+            <zipfileset dir="${build.voice}" prefix="${name.voice}"/-->
+            <!--<zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}"/>-->
         </zip>
         
         <remote target="deploy"/>

@@ -26,10 +26,21 @@
     <target name="backup">
         <property name="backup.dir" location="backup-${TSTAMP}" />
         <property name="backup.client.dir" location="${backup.dir}/${name.client}" />
+        <!--property name="backup.apps.dir" location="${backup.dir}/${name.apps}" />
+        <property name="backup.voice.dir" location="${backup.dir}/${name.voice}" /-->
+        
         <mkdir dir="${backup.client.dir}" />
         <copy toDir="${backup.client.dir}">
             <fileset dir="${deploy.client}" />
         </copy>
+        <!--mkdir dir="${backup.apps.dir}" />
+        <copy toDir="${backup.apps.dir}">
+            <fileset dir="${deploy.apps}" />
+        </copy>
+        <mkdir dir="${backup.voice.dir}" />
+        <copy toDir="${backup.voice.dir}">
+            <fileset dir="${deploy.voice}" />
+        </copy-->
     </target>
 
     <target name="restore" depends="init">
@@ -42,6 +53,12 @@
         <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="${last_backup}/${name.client}" />
         </copy>
+        <!--copy toDir="${deploy.apps}" overwrite="true">
+            <fileset dir="${last_backup}/${name.apps}" />
+        </copy>
+        <copy toDir="${deploy.voice}" overwrite="true">
+            <fileset dir="${last_backup}/${name.voice}" />
+        </copy-->
         <antcall target="finalize" />
     </target>
 
@@ -51,6 +68,12 @@
         <copy toDir="${deploy.client}" overwrite="true">
             <fileset dir="bigbluebutton/${name.client}" />
         </copy>
+        <!--copy toDir="${deploy.apps}" overwrite="true">
+            <fileset dir="bigbluebutton/${name.apps}" />
+        </copy>
+        <copy toDir="${deploy.voice}" overwrite="true">
+            <fileset dir="bigbluebutton/${name.voice}" />
+        </copy-->
         
         <!--            
         character   reference
