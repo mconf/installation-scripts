@@ -11,6 +11,7 @@ MCONF_WEB=/home/firstuser/mconf-web/current
 sudo /etc/init.d/god stop
 sudo rm /var/log/god.log
 sudo rm /var/log/apache2/*
+sudo rm /usr/local/bin/mconf*~
 sudo rm $MCONF_WEB/log/*.log
 touch $MCONF_WEB/log/production.log
 sudo rm -r $MCONF_WEB/tmp/attachment_fu
