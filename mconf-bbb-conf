@@ -15,15 +15,53 @@ MCONF_BRANCH=current
 HOST=`ifconfig  | grep 'inet addr:'| grep -v '127.0.0.1' | cut -d: -f2 | awk '{ print $1}'`;
 PORT=8888
 
-# check for user args
-if [[ $# -ge 1 ]]; then
-    HOST="${1}"
-    if echo $HOST|grep -q ":"; then
-        HOST=`echo ${1}|cut -d: -f1`
-        PORT=`echo ${1}|cut -d: -f2`
+usage() {
+    echo "Mconf-BBB customization script. Applies Mconf customizations on BigBlueButton 0.71a."
+    echo "http://code.google.com/p/mconf"
+    echo
+    echo "   mconf-bbb-conf [-a ADDRESS] [-p BIGBLUEBUTTON_PORT]"
+    echo "     [ADDRESS] is the IP or name address of your machine."
+    echo "     [BIGBLUEBUTTON_PORT] is the port to be used by BigBlueButton (set it with bbb-conf --setip)."
+    echo
+    echo "  Other options:"
+    echo "    --help, -h                       Shows this help"
+    echo
+}
+
+while [ $# -gt 0 ]; do
+    if [ "$1" = "--help" -o "$1" = "-help" -o "$1" = "-h" ]; then
+        usage
+        exit 0
     fi
-fi
-echo "# Setting IP:PORT to ${HOST}:${PORT}"
+    if [ "$1" = "--address" -o "$1" = "-a" ]; then
+        shift
+        HOST="${1}"
+        shift
+        continue
+    fi
+    if [ "$1" = "--port" -o "$1" = "-p" ]; then
+        shift
+        PORT="${1}"
+        shift
+        continue
+    fi
+    echo
+    echo "--------------------------------------------------------------------------------"
+    echo "  Unknown command ${1}"
+    echo "  Aborting."
+    echo "--------------------------------------------------------------------------------"
+    echo
+    usage
+    exit 1
+done
+
+echo "Setup Mconf-BBB"
+echo
+echo "             Address: ${HOST}"
+echo "  BigBlueButton Port: ${PORT}"
+echo
+
+exit
 
 ## http://stackoverflow.com/questions/59838/how-to-check-if-a-directory-exists-in-a-bash-shell-script
 if [ ! -d "$BBB_SOURCE" ]

@@ -9,7 +9,88 @@
 # You can find this file at: https://github.com/mconf/installation-scripts
 
 MCONF_VM_VERSION=0.2    # Mconf VM version
-BBB_PORT=8888           # Port for BigBlueButton
+BBB_PORT=8888           # Default port for BigBlueButton
+IP=
+BBB_SOURCE=/home/firstuser/dev/source/bigbluebutton
+MCONF_WEB_PATH=~/mconf-web/current                         # local directory where the dev environment is
+
+usage() {
+    echo "Mconf configuration script for the Mconf VM $MCONF_VM_VERSION"
+    echo "http://code.google.com/p/mconf"
+    echo
+    echo "   mconf-vm [-a ADDRESS] [-p BIGBLUEBUTTON_PORT]"
+    echo "     [ADDRESS] is the IP or name address of your machine."
+    echo "     [BIGBLUEBUTTON_PORT] is the port to be used by BigBlueButton (set it with bbb-conf --setip)."
+    echo
+    echo "  Other options:"
+    echo "    --help, -h                       Shows this help"
+    echo
+}
+
+while [ $# -gt 0 ]; do
+    if [ "$1" = "--help" -o "$1" = "-help" -o "$1" = "-h" ]; then
+        usage
+        exit 0
+    fi
+    if [ "$1" = "--address" -o "$1" = "-a" ]; then
+        shift
+        IP="${1}"
+        shift
+        continue
+    fi
+    if [ "$1" = "--port" -o "$1" = "-p" ]; then
+        shift
+        BBB_PORT="${1}"
+        shift
+        continue
+    fi
+    echo
+    echo "--------------------------------------------------------------------------------"
+    echo "  Unknown command ${1}"
+    echo "  Aborting."
+    echo "--------------------------------------------------------------------------------"
+    echo
+    usage
+    exit 1
+done
+
+setup_mconf_bbb() {
+    cd $BBB_SOURCE/bigbluebutton-client
+
+    echo '-- Configuring config.xml'
+    sudo cp bin/conf/config.xml /var/www/bigbluebutton/client/conf/config.xml
+    sudo bbb-conf --setip $IP:$BBB_PORT
+    sudo cp /var/www/bigbluebutton/client/conf/config.xml bin/conf/config.xml
+    cp bin/conf/config.xml src/conf/config.xml
+
+    echo '-- Configuring sip.server'
+    sudo sed -i "s/sip\.server\.host=.*/sip.server.host=$IP/g" /usr/share/red5/webapps/sip/WEB-INF/bigbluebutton-sip.properties
+
+    echo '-- Restarting BBB'
+    NEW_SALT=`date +%s | sha256sum | base64 | head -c 32`
+    sudo bbb-conf --setsalt $NEW_SALT
+    sudo sed -i "s/String salt = .*/String salt = \"$NEW_SALT\"/" /var/lib/tomcat6/webapps/bigbluebutton/demo/bbb_api_conf.jsp
+    sudo bbb-conf --clean
+}
+
+setup_mconf_web() {
+    echo "-- Editing the configuration files"
+    SALT=`bbb-conf --salt | grep "Salt" | sed 's/[[:blank:]]*Salt: //'`
+    MCONF_WEB_SETUP_CONF="$MCONF_WEB_PATH/config/setup_conf.yml"
+    sed -i "s/\(^[[:space:]]*bbb_server_url:\)[^#$]*\(.*\)$/\1 \"http:\/\/${IP}:${BBB_PORT}\/bigbluebutton\/api\" \2/g" $MCONF_WEB_SETUP_CONF
+    sed -i "s/\(^[[:space:]]*bbb_server_salt:\)[^#$]*\(.*\)$/\1 \"${SALT}\" \2/g" $MCONF_WEB_SETUP_CONF
+    sed -i "s/\(^[[:space:]]*site_domain:\)[^#$]*\(.*\)$/\1 \"${IP}\" \2/g" $MCONF_WEB_SETUP_CONF
+    sudo sed -i "s/ServerName .*/ServerName ${IP};/" /etc/apache2/sites-enabled/mconf-web
+
+    echo "-- Configuring the application"
+    cd $MCONF_WEB_PATH
+    bundle exec rake setup:db RAILS_ENV=production
+    bundle exec rake secret RAILS_ENV=production
+
+    echo "-- Restarting Apache"
+    sudo /etc/init.d/apache2 restart
+}
+
 
 echo
 echo "*******************************************************************************"
@@ -17,27 +98,22 @@ echo " Setting up Mconf VM version ${MCONF_VM_VERSION}"
 echo "*******************************************************************************"
 echo
 
-# get an IP
-sudo dhclient
-IP=$(ifconfig | grep -v '127.0.0.1' | grep -E "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | head -1 | cut -d: -f2 | awk '{print $1}') # local IP got from ifconfig
-
-# checks for user args
-if [[ $# -ge 1 ]]; then
-    IP="${1}"
-    echo "* Setting IP to ${IP}"
-    shift
-fi
-if [[ $# -ge 1 ]]; then
-    BBB_PORT="${1}"
-    echo "* Setting BigBlueButton port to ${BBB_PORT}"
-    shift
+# get an IP if not set
+if [ ! $IP ]; then
+    IP=$(ifconfig | grep -v '127.0.0.1' | grep -E "[0-9]*\.[0-9]*\.[0-9]*\.[0-9]*" | head -1 | cut -d: -f2 | awk '{print $1}') # local IP got from ifconfig
 fi
 
-# Configures our customizations over BBB
-mconf-bbb-conf $IP:$BBB_PORT
+echo "Setup Mconf VM"
+echo
+echo "             Address: ${IP}"
+echo "  BigBlueButton Port: ${BBB_PORT}"
+echo
+
+# Configures our customizations on BBB
+setup_mconf_bbb
 
 # Mconf-Web configurations. Needs user input.
-mconf-web-vm-conf -a $IP -p $BBB_PORT
+setup_mconf_web
 
 echo
 echo "*******************************************************************************"

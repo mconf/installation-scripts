@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#
+# Cleanup the VM before creating a release.
+#
+
+MCONF_VM_VERSION=0.2    # Mconf VM version
+
+MCONF_WEB=/home/firstuser/mconf-web/current
+
+sudo /etc/init.d/god stop
+sudo rm /var/log/god.log
+sudo rm /var/log/apache2/*
+sudo rm $MCONF_WEB/log/*.log
+touch $MCONF_WEB/log/production.log
+sudo rm -r $MCONF_WEB/tmp/attachment_fu
+sudo rm $MCONF_WEB/tmp/pids/*
+sudo rm $MCONF_WEB/db/*.sqlite3
+cp $MCONF_WEB/config/setup_conf.yml.example $MCONF_WEB/config/setup_conf.yml
+
+cd $MCONF_WEB
+bundle exec rake db:drop:all RAILS_ENV=production
+
+cd ~
+rm .bash_history
