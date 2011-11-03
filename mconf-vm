@@ -87,8 +87,10 @@ setup_mconf_web() {
     bundle exec rake setup:db RAILS_ENV=production
     bundle exec rake secret RAILS_ENV=production
 
-    echo "-- Restarting Apache"
+    echo "-- Restarting Mconf-Web"
     sudo /etc/init.d/apache2 restart
+    sudo /etc/init.d/god stop
+    sudo /etc/init.d/god start
 }
 
 
