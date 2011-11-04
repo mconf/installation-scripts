@@ -69,7 +69,7 @@ setup_mconf_bbb() {
     echo '-- Restarting BBB'
     NEW_SALT=`date +%s | sha256sum | base64 | head -c 32`
     sudo bbb-conf --setsalt $NEW_SALT
-    sudo sed -i "s/String salt = .*/String salt = \"$NEW_SALT\"/" /var/lib/tomcat6/webapps/bigbluebutton/demo/bbb_api_conf.jsp
+    sudo sed -i "s/String salt = .*/String salt = \"$NEW_SALT\";/" /var/lib/tomcat6/webapps/bigbluebutton/demo/bbb_api_conf.jsp
     sudo bbb-conf --clean
 }
 
