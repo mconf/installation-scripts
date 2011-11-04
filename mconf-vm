@@ -18,9 +18,10 @@ usage() {
     echo "Mconf configuration script for the Mconf VM $MCONF_VM_VERSION"
     echo "http://code.google.com/p/mconf"
     echo
-    echo "   mconf-vm [-a ADDRESS] [-p BIGBLUEBUTTON_PORT]"
+    echo "   mconf-vm [-a ADDRESS] [-p BIGBLUEBUTTON_PORT] [--setip]"
     echo "     [ADDRESS] is the IP or name address of your machine."
-    echo "     [BIGBLUEBUTTON_PORT] is the port to be used by BigBlueButton (set it with bbb-conf --setip)."
+    echo "     [BIGBLUEBUTTON_PORT] is the port to be used by BigBlueButton."
+    echo "     --setip : use this flag to change the IP of Mconf (it will not recreate Mconf-Web's database)."
     echo
     echo "  Other options:"
     echo "    --help, -h                       Shows this help"
@@ -41,6 +42,12 @@ while [ $# -gt 0 ]; do
     if [ "$1" = "--port" -o "$1" = "-p" ]; then
         shift
         BBB_PORT="${1}"
+        shift
+        continue
+    fi
+    if [ "$1" = "--setip" -o "$1" = "-s" ]; then
+        shift
+        SETIP=1
         shift
         continue
     fi
@@ -82,15 +89,15 @@ setup_mconf_web() {
     sed -i "s/\(^[[:space:]]*site_domain:\)[^#$]*\(.*\)$/\1 \"${IP}\" \2/g" $MCONF_WEB_SETUP_CONF
     sudo sed -i "s/ServerName .*/ServerName ${IP};/" /etc/apache2/sites-enabled/mconf-web
 
-    echo "-- Configuring the application"
-    cd $MCONF_WEB_PATH
-    bundle exec rake setup:db RAILS_ENV=production
-    bundle exec rake secret RAILS_ENV=production
+    if [ ! $SETIP ]; then
+        echo "-- Configuring the application"
+        cd $MCONF_WEB_PATH
+        bundle exec rake setup:db RAILS_ENV=production
+        bundle exec rake secret RAILS_ENV=production
+    fi
 
     echo "-- Restarting Mconf-Web"
-    sudo /etc/init.d/apache2 restart
-    sudo /etc/init.d/god stop
-    sudo /etc/init.d/god start
+    mconf-web-conf --restart
 }
 
 
