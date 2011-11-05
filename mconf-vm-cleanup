@@ -5,16 +5,19 @@
 #
 
 MCONF_VM_VERSION=0.2    # Mconf VM version
-
 MCONF_WEB=/home/firstuser/mconf-web/current
 
 sudo /etc/init.d/god terminate
+
+find ~ -name "*~" -delete
+find ~ -name "*.log" -delete
+rm dump.rdb # redis db
 sudo rm /var/log/god.log
 sudo rm /var/log/apache2/*
 sudo rm /usr/local/bin/mconf*~
-sudo rm $MCONF_WEB/log/*.log
 touch $MCONF_WEB/log/production.log
-sudo rm -r $MCONF_WEB/tmp/attachment_fu
+sudo rm -r $MCONF_WEB/tmp/attachment_fu/
+mkdir $MCONF_WEB/tmp/attachment_fu/
 sudo rm $MCONF_WEB/tmp/pids/*
 sudo rm $MCONF_WEB/db/*.sqlite3
 cp $MCONF_WEB/config/setup_conf.yml.example $MCONF_WEB/config/setup_conf.yml
