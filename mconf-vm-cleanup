@@ -8,7 +8,7 @@ MCONF_VM_VERSION=0.2    # Mconf VM version
 
 MCONF_WEB=/home/firstuser/mconf-web/current
 
-sudo /etc/init.d/god stop
+sudo /etc/init.d/god terminate
 sudo rm /var/log/god.log
 sudo rm /var/log/apache2/*
 sudo rm /usr/local/bin/mconf*~
