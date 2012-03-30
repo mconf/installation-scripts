@@ -17,31 +17,60 @@
         </exec>
         <echo message="Current BigBlueButton IP and port is ${target.ip}" />
 
+        <exec executable="bash" outputproperty="target.salt">
+            <arg value="-c" />
+            <arg value="${target.salt.expression}" />
+        </exec>
+        <echo message="Current BigBlueButton salt ${target.salt}" />
+
         <echo message="Stopping BigBlueButton server" />
         <exec executable="/usr/local/bin/bbb-conf">
             <arg line="--stop" />
         </exec>
     </target>
     
+    <target name="install">
+        <exec executable="chmod">
+            <arg line="+x" />
+            <arg line="${basedir}/install-bigbluebutton.sh" />
+        </exec>        
+        <exec executable="${basedir}/install-bigbluebutton.sh" />
+        <exec executable="bash">
+            <arg value="-c" />
+            <arg value="echo 'Finalized, press Ctrl + C to quit'" />
+        </exec>
+    </target>
+    
+    <macrodef name="backup-module">
+        <attribute name="backup.module.dir"/>
+        <attribute name="deploy.dir"/>
+        <sequential>
+            <mkdir dir="@{backup.module.dir}" />
+            <copy toDir="@{backup.module.dir}">
+                <fileset dir="@{deploy.dir}" />
+            </copy>
+        </sequential>
+    </macrodef>
+    
     <target name="backup">
         <property name="backup.dir" location="backup-${TSTAMP}" />
-        <property name="backup.client.dir" location="${backup.dir}/${name.client}" />
-        <!--property name="backup.apps.dir" location="${backup.dir}/${name.apps}" />
-        <property name="backup.voice.dir" location="${backup.dir}/${name.voice}" /-->
         
-        <mkdir dir="${backup.client.dir}" />
-        <copy toDir="${backup.client.dir}">
-            <fileset dir="${deploy.client}" />
-        </copy>
-        <!--mkdir dir="${backup.apps.dir}" />
-        <copy toDir="${backup.apps.dir}">
-            <fileset dir="${deploy.apps}" />
-        </copy>
-        <mkdir dir="${backup.voice.dir}" />
-        <copy toDir="${backup.voice.dir}">
-            <fileset dir="${deploy.voice}" />
-        </copy-->
+        <backup-module backup.module.dir="${backup.dir}/${name.client}" deploy.dir="${deploy.client}" />
+        <backup-module backup.module.dir="${backup.dir}/${name.apps}" deploy.dir="${deploy.apps}" />
+        <backup-module backup.module.dir="${backup.dir}/${name.voice}" deploy.dir="${deploy.voice}" />
+        <backup-module backup.module.dir="${backup.dir}/${name.video}" deploy.dir="${deploy.video}" />
+        <backup-module backup.module.dir="${backup.dir}/${name.web}" deploy.dir="${deploy.web}" /><!-- demo is included here -->
     </target>
+
+    <macrodef name="deploy-module">
+        <attribute name="from"/>
+        <attribute name="to"/>
+        <sequential>
+            <copy toDir="@{to}" overwrite="true" verbose="true">
+                <fileset dir="@{from}" />
+            </copy>
+        </sequential>
+    </macrodef>
 
     <target name="restore" depends="init">
         <exec executable="bash" outputproperty="last_backup">
@@ -50,31 +79,29 @@
         </exec>
         <echo message="Last backup folder is ${last_backup}" />
 
-        <copy toDir="${deploy.client}" overwrite="true">
-            <fileset dir="${last_backup}/${name.client}" />
-        </copy>
-        <!--copy toDir="${deploy.apps}" overwrite="true">
-            <fileset dir="${last_backup}/${name.apps}" />
-        </copy>
-        <copy toDir="${deploy.voice}" overwrite="true">
-            <fileset dir="${last_backup}/${name.voice}" />
-        </copy-->
+        <deploy-module from="${last_backup}/${name.client}" to="${deploy.client}" />
+        <deploy-module from="${last_backup}/${name.apps}" to="${deploy.apps}" />
+        <deploy-module from="${last_backup}/${name.voice}" to="${deploy.voice}" />
+        <deploy-module from="${last_backup}/${name.video}" to="${deploy.video}" />
+        <delete dir="${deploy.demo}" /><deploy-module from="${last_backup}/${name.demo}" to="${deploy.demo}/../" />
+        <delete dir="${deploy.web}" /><deploy-module from="${last_backup}/${name.web}" to="${deploy.web}/../" />
+
         <antcall target="finalize" />
     </target>
 
     <target name="deploy" depends="init, backup">
         <unzip src="${basedir}/bigbluebutton.zip"
                 dest="bigbluebutton" />
-        <copy toDir="${deploy.client}" overwrite="true">
-            <fileset dir="bigbluebutton/${name.client}" />
-        </copy>
-        <!--copy toDir="${deploy.apps}" overwrite="true">
-            <fileset dir="bigbluebutton/${name.apps}" />
-        </copy>
-        <copy toDir="${deploy.voice}" overwrite="true">
-            <fileset dir="bigbluebutton/${name.voice}" />
-        </copy-->
+
+        <deploy-module from="bigbluebutton/${name.client}" to="${deploy.client}" />
+        <deploy-module from="bigbluebutton/${name.apps}" to="${deploy.apps}" />
+        <deploy-module from="bigbluebutton/${name.voice}" to="${deploy.voice}" />
+        <deploy-module from="bigbluebutton/${name.video}" to="${deploy.video}" />
+        <delete dir="${deploy.demo}" /><deploy-module from="bigbluebutton/${name.demo}" to="${deploy.demo}/../" />
         
+        <move file="bigbluebutton/${name.web}/bigbluebutton-0.70dev.war" tofile="bigbluebutton/${name.web}/bigbluebutton.war" overwrite="true"/>
+        <delete dir="${deploy.web}" /><deploy-module from="bigbluebutton/${name.web}" to="${deploy.web}/../" />
+                
         <!--            
         character   reference
         <   &lt;
@@ -105,11 +132,9 @@
     </target>
     
     <target name="finalize">
-        <exec executable="/usr/local/bin/bbb-conf">
-            <arg line="--setip ${target.ip}" />
-        </exec>
-        <exec executable="/usr/local/bin/bbb-conf">
-            <arg line="--clean" />
+        <exec executable="bash">
+            <arg value="-c" />
+            <arg value="service tomcat6 start; sleep 10s; bbb-conf --setsalt ${target.salt}; sed -i &#39;s:String salt = .*:String salt = &quot;${target.salt}&quot;;:g&#39; ${deploy.demo}/bbb_api_conf.jsp; chmod +x enable-mobile-fs.sh; ./enable-mobile-fs.sh; bbb-conf --setip ${target.ip}; bbb-conf --clean; bbb-conf --check; echo 'Finalized, press Ctrl + C to quit'" />
         </exec>
     </target>
 </project>

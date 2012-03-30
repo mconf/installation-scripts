@@ -1,9 +1,0 @@
-#!/bin/bash
-
-if [ `find -name 'backup-*' | wc -l` -eq 0 ]
-then
-    exit 1
-else
-    find -name 'backup-*' | sort -r | head -1
-    exit 0
-fi

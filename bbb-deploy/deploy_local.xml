@@ -31,6 +31,7 @@
                 <fileset dir="${basedir}">
                     <include name="deploy_target.xml" />
                     <include name="default.properties" />
+                    <include name="*.sh" />
                 </fileset>
             </copy>
             
@@ -45,17 +46,19 @@
                     password="${target.password}" trust="yes">
                 <fileset dir="${deploy.local.dir}" />
             </scp>
-            <!--<sshexec host="${target.host}"
+            <echo message="Executing remote host task" />
+            <!--sshexec host="${target.host}"
                     username="${target.username}"
                     password="${target.password}"
                     trust="true"
-                    command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S ant -f deploy_target.xml @{target}"/>-->
-            <echo message="Executing remote host task" />
+                    command="cd ${deploy.target.dir}; if [ `dpkg - -get-selections 'ant' | wc -l` -eq 0 ]; then echo '${target.password}' | sudo -S aptitude update; sudo aptitude -y install ant; fi; echo '${target.password}' | sudo -S -u ${target.username} ant -f deploy_target.xml @{target}"/-->
             <sshexec host="${target.host}"
                     username="${target.username}"
                     password="${target.password}"
                     trust="true"
-                    command="cd ${deploy.target.dir}; echo '${target.password}' | sudo -S apt-get -y install ant; sudo ant -f deploy_target.xml @{target}"/>
+                    command="cd ${deploy.target.dir}; if [ `dpkg --get-selections 'ant' | wc -l` -eq 0 ]; then echo '${target.password}' | sudo -S aptitude update; sudo aptitude -y install ant; fi; echo '${target.password}' | sudo -S ant -f deploy_target.xml @{target}"/>
+                    
+                    
         </sequential>
     </macrodef>
 
@@ -66,11 +69,17 @@
     <target name="deploy" depends="init">
         <zip destfile="${deploy.local.dir}/bigbluebutton.zip">
             <zipfileset dir="${build.client}" prefix="${name.client}"/>
-            <!--zipfileset dir="${build.apps}" prefix="${name.apps}"/>
-            <zipfileset dir="${build.voice}" prefix="${name.voice}"/-->
-            <!--<zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}"/>-->
+            <zipfileset dir="${build.apps}" prefix="${name.apps}"/>
+            <zipfileset dir="${build.voice}" prefix="${name.voice}"/>
+            <zipfileset dir="${build.video}" prefix="${name.video}" />
+            <zipfileset dir="${build.demo}" includes="*.war" prefix="${name.demo}" />
+            <zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}" />
         </zip>
         
         <remote target="deploy"/>
+    </target>
+    
+    <target name="install" depends="init">
+        <remote target="install"/>
     </target>
 </project>
