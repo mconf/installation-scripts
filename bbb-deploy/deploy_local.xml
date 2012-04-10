@@ -72,8 +72,10 @@
             <zipfileset dir="${build.apps}" prefix="${name.apps}"/>
             <zipfileset dir="${build.voice}" prefix="${name.voice}"/>
             <zipfileset dir="${build.video}" prefix="${name.video}" />
+            <zipfileset dir="${build.deskshare}" prefix="${name.deskshare}" />
             <zipfileset dir="${build.demo}" includes="*.war" prefix="${name.demo}" />
             <zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}" />
+            <zipfileset dir="${build.config}" prefix="${name.config}" />
         </zip>
         
         <remote target="deploy"/>

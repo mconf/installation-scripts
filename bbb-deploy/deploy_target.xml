@@ -59,14 +59,16 @@
         <backup-module backup.module.dir="${backup.dir}/${name.apps}" deploy.dir="${deploy.apps}" />
         <backup-module backup.module.dir="${backup.dir}/${name.voice}" deploy.dir="${deploy.voice}" />
         <backup-module backup.module.dir="${backup.dir}/${name.video}" deploy.dir="${deploy.video}" />
+        <backup-module backup.module.dir="${backup.dir}/${name.deskshare}" deploy.dir="${deploy.deskshare}" />
         <backup-module backup.module.dir="${backup.dir}/${name.web}" deploy.dir="${deploy.web}" /><!-- demo is included here -->
+        <backup-module backup.module.dir="${backup.dir}/${name.config}" deploy.dir="${deploy.config}" />
     </target>
 
     <macrodef name="deploy-module">
         <attribute name="from"/>
         <attribute name="to"/>
         <sequential>
-            <copy toDir="@{to}" overwrite="true" verbose="true">
+            <copy toDir="@{to}" overwrite="true">
                 <fileset dir="@{from}" />
             </copy>
         </sequential>
@@ -83,8 +85,9 @@
         <deploy-module from="${last_backup}/${name.apps}" to="${deploy.apps}" />
         <deploy-module from="${last_backup}/${name.voice}" to="${deploy.voice}" />
         <deploy-module from="${last_backup}/${name.video}" to="${deploy.video}" />
-        <delete dir="${deploy.demo}" /><deploy-module from="${last_backup}/${name.demo}" to="${deploy.demo}/../" />
-        <delete dir="${deploy.web}" /><deploy-module from="${last_backup}/${name.web}" to="${deploy.web}/../" />
+        <deploy-module from="${last_backup}/${name.deskshare}" to="${deploy.deskshare}" />
+        <delete dir="${deploy.web}" /><deploy-module from="${last_backup}/${name.web}" to="${deploy.web}/../" /><!-- demo is included here -->
+        <deploy-module from="${last_backup}/${name.config}" to="${deploy.config}" />
 
         <antcall target="finalize" />
     </target>
@@ -97,10 +100,14 @@
         <deploy-module from="bigbluebutton/${name.apps}" to="${deploy.apps}" />
         <deploy-module from="bigbluebutton/${name.voice}" to="${deploy.voice}" />
         <deploy-module from="bigbluebutton/${name.video}" to="${deploy.video}" />
+        <deploy-module from="bigbluebutton/${name.deskshare}" to="${deploy.deskshare}" />
+        <deploy-module from="bigbluebutton/${name.config}" to="${deploy.config}" />
+        
         <delete dir="${deploy.demo}" /><deploy-module from="bigbluebutton/${name.demo}" to="${deploy.demo}/../" />
         
         <move file="bigbluebutton/${name.web}/bigbluebutton-0.70dev.war" tofile="bigbluebutton/${name.web}/bigbluebutton.war" overwrite="true"/>
         <delete dir="${deploy.web}" /><deploy-module from="bigbluebutton/${name.web}" to="${deploy.web}/../" />
+        
                 
         <!--            
         character   reference
@@ -134,7 +141,7 @@
     <target name="finalize">
         <exec executable="bash">
             <arg value="-c" />
-            <arg value="service tomcat6 start; sleep 10s; bbb-conf --setsalt ${target.salt}; sed -i &#39;s:String salt = .*:String salt = &quot;${target.salt}&quot;;:g&#39; ${deploy.demo}/bbb_api_conf.jsp; chmod +x enable-mobile-fs.sh; ./enable-mobile-fs.sh; bbb-conf --setip ${target.ip}; bbb-conf --clean; bbb-conf --check; echo 'Finalized, press Ctrl + C to quit'" />
+            <arg value="service tomcat6 start; chmod +x ${deploy.config}/*; sleep 10s; bbb-conf --setsalt ${target.salt}; sed -i &#39;s:String salt = .*:String salt = &quot;${target.salt}&quot;;:g&#39; ${deploy.demo}/bbb_api_conf.jsp; chmod +x enable-mobile-fs.sh; ./enable-mobile-fs.sh; bbb-conf --setip ${target.ip}; bbb-conf --clean; bbb-conf --check; echo 'Finalized, press Ctrl + C to quit'" />
         </exec>
     </target>
 </project>
