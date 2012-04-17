@@ -1,6 +1,7 @@
 #!/bin/bash
 
-if [ `ruby -v | grep 'ruby 1.9.2p290' | wc -l` -eq 1 ]
+RUBY_VERSION=`ruby -v`
+if [ $? -eq 0 ] && [ `echo $RUBY_VERSION | grep 'ruby 1.9.2p290' | wc -l` -eq 1 ]
 then
     exit 0
 fi
