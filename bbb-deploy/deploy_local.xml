@@ -7,14 +7,7 @@
         <echoproperties />
     </target>
 
-    <target name="init" depends="userpass">
-        <tstamp>
-            <format property="TSTAMP" pattern="yyyyMMdd-HHmmss"/>
-        </tstamp>
-
-        <delete dir="${deploy.local.dir}" />
-        <mkdir dir="${deploy.local.dir}" />
-    </target>
+    <target name="init" depends="userpass" />
 
     <target name="userpass">
         <input message="host     > " addproperty="target.host" />
@@ -27,7 +20,7 @@
     <macrodef name="remote">
         <attribute name="target"/>
         <sequential>
-            <copy toDir="${deploy.local.dir}">
+            <copy toDir="${deploy.local.dir}" overwrite="true">
                 <fileset dir="${basedir}">
                     <include name="deploy_target.xml" />
                     <include name="default.properties" />
@@ -67,6 +60,9 @@
     </target>
 
     <target name="prepare" depends="init">
+        <delete dir="${deploy.local.dir}" />
+        <mkdir dir="${deploy.local.dir}" />
+
         <zip destfile="${deploy.local.dir}/bigbluebutton.zip">
             <zipfileset dir="${build.client}" prefix="${name.client}"/>
             <zipfileset dir="${build.apps}" prefix="${name.apps}"/>
