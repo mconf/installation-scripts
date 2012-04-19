@@ -1,15 +1,1 @@
-## Local
-
-ant deploy -f deploy_local.xml -lib lib/
-
-\todo
-
-# Install ant by the script in the remote machine
-
-# The voice application failed to register with the sip server.
-#   Try running: sudo bbb-conf --clean
-
-# The IP address (143.54.12.10) set for sip.server.host in
-#    /usr/share/red5/webapps/sip/WEB-INF/bigbluebutton-sip.properties
-# does not match the local IP address (143.54.12.113). 
-
+ant prepare deploy -f deploy_local.xml -lib lib/

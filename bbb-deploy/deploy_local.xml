@@ -66,7 +66,7 @@
         <remote target="restore" />
     </target>
 
-    <target name="deploy" depends="init">
+    <target name="prepare" depends="init">
         <zip destfile="${deploy.local.dir}/bigbluebutton.zip">
             <zipfileset dir="${build.client}" prefix="${name.client}"/>
             <zipfileset dir="${build.apps}" prefix="${name.apps}"/>
@@ -77,7 +77,9 @@
             <zipfileset dir="${build.web}" includes="*.war" prefix="${name.web}" />
             <zipfileset dir="${build.config}" prefix="${name.config}" />
         </zip>
-        
+    </target>
+
+    <target name="deploy" depends="init">
         <remote target="deploy"/>
     </target>
     
