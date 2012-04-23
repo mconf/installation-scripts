@@ -61,7 +61,16 @@ cp sample-config/send_nsca.cfg /usr/local/nagios/etc/
 cd ..
 rm -rf nsca-2.7.2.tar.gz nsca-2.7.2
 
-git clone git://github.com/mconf/nagios-etc.git
+sudo killall performance_report.py
+
+if [ -d "nagios-etc" ]
+then
+    cd nagios-etc
+    git pull origin master
+    cd ..
+else
+    git clone git://github.com/mconf/nagios-etc.git
+fi
 nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
 
 crontab -l | grep -v "performance_report.py" > cron.jobs
