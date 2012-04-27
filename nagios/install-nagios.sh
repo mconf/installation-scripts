@@ -77,6 +77,7 @@ sudo cp ~/tools/nagios-etc/etc/nagios.cfg ~/tools/nagios-etc/etc/nsca.cfg /usr/l
 sudo crontab -l | grep -v "nagios-hosts.py" > cron.jobs
 echo "*/1 * * * * /usr/bin/python /usr/local/nagios/libexec/nagios-hosts/nagios-hosts.py reload" >> cron.jobs
 sudo crontab cron.jobs
+rm cron.jobs
 
 # configuring the central server
 sudo sed -i "s:nagios@localhost:mconf.prav@gmail.com:g" /usr/local/nagios/etc/objects/contacts.cfg

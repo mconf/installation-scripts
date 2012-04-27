@@ -3,7 +3,7 @@
 function print_usage
 {
 	echo "Usage:"
-	echo "    $0 <nagios_address> <bigbluebutton|freeswitch> <interval>"
+	echo "    $0 <nagios_address> <bigbluebutton|freeswitch|nagios> <interval>"
 	exit 1
 }
 
@@ -22,12 +22,17 @@ then
 	print_usage
 fi
 
-if [ $2 != "bigbluebutton" ] && [ $2 != "freeswitch" ]
+if [ $2 != "bigbluebutton" ] && [ $2 != "freeswitch" ] && [ $2 != "nagios" ]
 then
 	print_usage
 fi
 
-HOST=`get_hostname`
+if [ $2 == "nagios" ]
+then
+    HOST="localhost"
+else
+    HOST=`get_hostname`
+fi
 NAGIOS_ADDRESS=$1
 INSTANCE_TYPE=$2
 INTERVAL=$3
@@ -47,20 +52,6 @@ sudo python setup.py install
 cd ..
 rm -rf psutil-read-only/
 
-wget http://prdownloads.sourceforge.net/sourceforge/nagios/nsca-2.7.2.tar.gz
-tar xzf nsca-2.7.2.tar.gz
-cd nsca-2.7.2
-./configure
-make
-make install
-sudo mkdir -p /usr/local/nagios/bin/ /usr/local/nagios/etc/
-USER=`whoami`
-sudo chown $USER:$USER -R /usr/local/nagios
-cp src/send_nsca /usr/local/nagios/bin/
-cp sample-config/send_nsca.cfg /usr/local/nagios/etc/
-cd ..
-rm -rf nsca-2.7.2.tar.gz nsca-2.7.2
-
 sudo killall performance_report.py
 
 if [ -d "nagios-etc" ]
@@ -71,9 +62,26 @@ then
 else
     git clone git://github.com/mconf/nagios-etc.git
 fi
-nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
+
+if [ $2 != "nagios" ]
+then
+    wget http://prdownloads.sourceforge.net/sourceforge/nagios/nsca-2.7.2.tar.gz
+    tar xzf nsca-2.7.2.tar.gz
+    cd nsca-2.7.2
+    ./configure
+    make
+    make install
+    sudo mkdir -p /usr/local/nagios/bin/ /usr/local/nagios/etc/
+    USER=`whoami`
+    sudo chown $USER:$USER -R /usr/local/nagios
+    cp src/send_nsca /usr/local/nagios/bin/
+    cp sample-config/send_nsca.cfg /usr/local/nagios/etc/
+    cd ..
+    rm -rf nsca-2.7.2.tar.gz nsca-2.7.2
+    nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
+fi
 
 crontab -l | grep -v "performance_report.py" > cron.jobs
 echo "@reboot ~/tools/nagios-etc/cli/performance_report.py start --server $NAGIOS_ADDRESS --hostname $HOST --send_rate $INTERVAL > /dev/null 2>&1" >> cron.jobs
 crontab cron.jobs
-
+rm cron.jobs
