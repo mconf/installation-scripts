@@ -1,0 +1,19 @@
+736d735
+<       char *host_notes="";
+755d753
+<       char *service_performance_data="";
+978,981d975
+<                               if(temp_host->notes!=NULL){
+<                                       process_macros(temp_host->notes,&processed_string,0);
+<                                       host_notes=processed_string;
+<                       }
+1004d997
+< printf("\t\t\t\t \"host_notes\":\"%s\", \n", host_notes);
+1081d1073
+<                       service_performance_data=(temp_status->perf_data==NULL)?"":html_encode(temp_status->perf_data,TRUE);
+1099,1101c1091
+< printf("\t\t\t \"service_plugin_output\":\"%s\", \n", service_plugin_output);
+< printf("\t\t\t \"service_performance_data\":\"%s\" \n", service_performance_data);
+< 
+---
+> printf("\t\t\t \"service_plugin_output\":\"%s\" \n", service_plugin_output);

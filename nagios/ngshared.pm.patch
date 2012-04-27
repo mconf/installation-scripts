@@ -1,0 +1,4 @@
+805c805
+<             chomp $key;
+---
+>             chop $key;
