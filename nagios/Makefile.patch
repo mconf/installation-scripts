@@ -4,5 +4,5 @@
 > CGIS=avail.cgi cmd.cgi config.cgi extinfo.cgi history.cgi notifications.cgi outages.cgi showlog.cgi status.cgi statuswml.cgi summary.cgi tac.cgi $(CGIEXTRAS)
 162,164d161
 < status-json.cgi: status-json.c $(CGIDEPS) $(CDATADEPS)
-<       $(CC) $(CFLAGS) $(LDFLAGS) -o $@ status-json.c $(CGILIBS) $(CDATALIBS) $(LIBS)
+< 	$(CC) $(CFLAGS) $(LDFLAGS) -o $@ status-json.c $(CGILIBS) $(CDATALIBS) $(LIBS)
 < 
