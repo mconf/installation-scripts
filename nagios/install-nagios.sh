@@ -9,12 +9,10 @@ sudo aptitude install -y apache2 libapache2-mod-php5 build-essential libgd2-xpm-
 
 mkdir ~/downloads
 cd ~/downloads
-wget http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.3.1.tar.gz
-wget http://prdownloads.sourceforge.net/sourceforge/nagios/nsca-2.7.2.tar.gz
-wget http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.15.tar.gz
-wget http://sourceforge.net/projects/nagiosgraph/files/nagiosgraph/1.4.4/nagiosgraph-1.4.4.tar.gz
+wget -nc http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.3.1.tar.gz
+wget -nc http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.15.tar.gz
+wget -nc http://sourceforge.net/projects/nagiosgraph/files/nagiosgraph/1.4.4/nagiosgraph-1.4.4.tar.gz
 tar xzf nagios-3.3.1.tar.gz
-tar xzf nsca-2.7.2.tar.gz
 tar xzf nagios-plugins-1.4.15.tar.gz
 tar xzf nagiosgraph-1.4.4.tar.gz
 
@@ -42,19 +40,6 @@ cd ~/downloads/nagios-plugins-1.4.15
 ./configure --with-nagios-user=nagios --with-nagios-group=nagios
 make
 sudo make install
-
-cd ~/downloads/nsca-2.7.2
-./configure
-make
-sudo make install
-sudo cp src/nsca /usr/local/nagios/bin/
-sudo cp sample-config/nsca.cfg /usr/local/nagios/etc/
-sudo chmod a+r /usr/local/nagios/etc/nsca.cfg
-# install as XINETD service
-sudo cp ~/downloads/nsca-2.7.2/sample-config/nsca.xinetd /etc/xinetd.d/nsca
-sudo sed -i "s:\tonly_from.*:#\0:g" /etc/xinetd.d/nsca
-sudo chmod a+r /etc/xinetd.d/nsca
-sudo service xinetd restart
 
 # install PyNag
 cd ~/downloads

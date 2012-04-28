@@ -37,11 +37,23 @@ NAGIOS_ADDRESS=$1
 INSTANCE_TYPE=$2
 INTERVAL=$3
 
-mkdir -p ~/tools
-cd ~/tools
-
 sudo aptitude update
 sudo aptitude -y install git-core python-dev python-argparse subversion
+sudo killall performance_report.py
+
+mkdir -p ~/tools
+cd ~/tools
+if [ -d "nagios-etc" ]
+then
+    cd nagios-etc
+    git pull origin master
+    cd ..
+else
+    git clone git://github.com/mconf/nagios-etc.git
+fi
+
+mkdir -p ~/downloads
+cd ~/downloads
 
 # we are using the svn trunk instead of the lastest stable tag because of this:
 # http://code.google.com/p/psutil/issues/detail?id=248
@@ -52,34 +64,38 @@ sudo python setup.py install
 cd ..
 rm -rf psutil-read-only/
 
-sudo killall performance_report.py
+wget -nc http://prdownloads.sourceforge.net/sourceforge/nagios/nsca-2.7.2.tar.gz
+tar xzf nsca-2.7.2.tar.gz
+cd nsca-2.7.2
+./configure
+make
+make install
 
-if [ -d "nagios-etc" ]
+if [ $2 == "nagios" ]
 then
-    cd nagios-etc
-    git pull origin master
-    cd ..
+    sudo cp src/nsca /usr/local/nagios/bin/
+    sudo cp sample-config/nsca.cfg /usr/local/nagios/etc/
+    sudo chmod a+r /usr/local/nagios/etc/nsca.cfg
+    # install as XINETD service
+    sudo cp ~/downloads/nsca-2.7.2/sample-config/nsca.xinetd /etc/xinetd.d/nsca
+    sudo sed -i "s:\tonly_from.*:#\0:g" /etc/xinetd.d/nsca
+    sudo chmod a+r /etc/xinetd.d/nsca
+    sudo service xinetd restart
 else
-    git clone git://github.com/mconf/nagios-etc.git
-fi
-
-if [ $2 != "nagios" ]
-then
-    wget http://prdownloads.sourceforge.net/sourceforge/nagios/nsca-2.7.2.tar.gz
-    tar xzf nsca-2.7.2.tar.gz
-    cd nsca-2.7.2
-    ./configure
-    make
-    make install
     sudo mkdir -p /usr/local/nagios/bin/ /usr/local/nagios/etc/
     USER=`whoami`
     sudo chown $USER:$USER -R /usr/local/nagios
-    cp src/send_nsca /usr/local/nagios/bin/
-    cp sample-config/send_nsca.cfg /usr/local/nagios/etc/
-    cd ..
-    rm -rf nsca-2.7.2.tar.gz nsca-2.7.2
-    nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
 fi
+
+sudo cp src/send_nsca /usr/local/nagios/bin/
+sudo cp sample-config/send_nsca.cfg /usr/local/nagios/etc/
+sudo chmod a+r /usr/local/nagios/etc/send_nsca.cfg
+cd ..
+
+if [ $2 != "nagios" ]
+then
+    ~/tools/nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
+fi 
 
 crontab -l | grep -v "performance_report.py" > cron.jobs
 echo "@reboot ~/tools/nagios-etc/cli/performance_report.py start --server $NAGIOS_ADDRESS --hostname $HOST --send_rate $INTERVAL > /dev/null 2>&1" >> cron.jobs
