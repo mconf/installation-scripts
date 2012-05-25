@@ -13,5 +13,4 @@ echo "deb http://us.archive.ubuntu.com/ubuntu/ lucid multiverse" | sudo tee -a /
 echo "Updating the Ubuntu package repository"
 sudo apt-get update > /dev/null
 sudo apt-get -y dist-upgrade
-sudo apt-get -y install bigbluebutton
-sudo apt-get -y install bbb-demo
+sudo apt-get -y install bigbluebutton bbb-demo
