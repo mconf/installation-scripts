@@ -116,8 +116,12 @@
         "   &quot;
         &   &amp;
         '   &apos;
-        -->            
-        <property name="version" value="${TSTAMP}" />
+        -->
+        <condition property="version" value="${TSTAMP}">
+            <not>
+                <isset property="version" />
+            </not>
+        </condition>
         <echo message="Module version is ${version}" />
         <exec executable="bash">
             <arg value="-c" />
@@ -132,7 +136,7 @@
             <!--
             sed -i 's:<version>.*<\/version>:<version> - Mconf Server ${version}<\/version>:g' ${deploy.client}/conf/config.xml
             -->
-            <arg value="sed -i &apos;s:&lt;version&gt;.*&lt;\/version&gt;:&lt;version&gt; - Mconf Server ${version}&lt;\/version&gt;:g&apos; ${deploy.client}/conf/config.xml" />
+            <arg value="sed -i &apos;s:&lt;version&gt;.*&lt;\/version&gt;:&lt;version&gt;${version} - Mconf Server&lt;\/version&gt;:g&apos; ${deploy.client}/conf/config.xml" />
         </exec>
 
         <antcall target="finalize" />
