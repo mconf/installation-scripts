@@ -1,0 +1,56 @@
+#!/bin/bash
+
+function print_usage
+{
+	echo "Usage:"
+	echo "    $0 <domain_name>"
+	exit 1
+}
+
+if [ `lsb_release --description | grep 'Ubuntu 10.04' | wc -l` -eq 0 ]
+then
+    echo "A Mconf node MUST BE a fresh installation of Ubuntu 10.04 Server"
+    exit 1
+fi
+
+if [ `whoami` == "root" ]
+then
+    echo "This script shouldn't be executed as root"
+    exit 1
+fi
+
+if [ $# -ne 1 ]
+then
+	print_usage
+fi
+
+echo "Updating the Ubuntu package repository"
+sudo apt-get update > /dev/null
+sudo apt-get -y install git-core htop iftop ant
+
+mkdir -p ~/tools
+cd ~/tools
+git clone git://github.com/mconf/installation-scripts.git
+cd installation-scripts/bbb-deploy/
+
+chmod +x install-bigbluebutton.sh
+./install-bigbluebutton.sh
+sudo bbb-conf --setip $1
+
+chmod +x install-notes.sh
+./install-notes.sh
+
+chmod +x install-monitor.sh
+./install-monitor.sh lb.mconf.org bigbluebutton 10
+
+wget -O bigbluebutton.zip "http://mconf.org:8888/mconf-node/mconf-bbb-wrnp2012.zip"
+sudo ant -f deploy_target.xml deploy
+
+chmod +x mconf-presentation.sh
+./mconf-presentation.sh
+
+chmod +x enable-mobile-fs.sh
+./enable-mobile-fs.sh
+
+echo "Restart the server to finish the installation"
+echo "It will take a while to start the live notes server, please be patient"

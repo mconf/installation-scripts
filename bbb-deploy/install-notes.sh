@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo aptitude update; sudo aptitude -y install openjdk-6-jdk
+sudo apt-get -y install openjdk-6-jdk
 
 # https://github.com/harrah/xsbt/wiki/Setup
 mkdir -p ~/tools
@@ -24,10 +24,9 @@ echo "sbt \"run 8095\"" >> live-notes-server.sh
 chmod +x live-notes-server.sh
 sudo mv live-notes-server.sh /usr/bin/
 
-if [ `crontab -l | grep '/usr/bin/live-notes-server.sh' | wc -l` -eq 0 ]
-then
-    crontab -l > cron.jobs
-    echo '@reboot /usr/bin/live-notes-server.sh > /dev/null 2>&1 &' >> cron.jobs
-    crontab cron.jobs
-fi
+crontab -l | grep -v "live-notes-server.sh" > cron.jobs
+echo "@reboot /usr/bin/live-notes-server.sh > /dev/null 2>&1 &" >> cron.jobs
+crontab cron.jobs
+rm cron.jobs
 
+echo "The live notes server installation will be concluded when the server restarts"

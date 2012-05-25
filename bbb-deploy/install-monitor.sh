@@ -37,15 +37,16 @@ NAGIOS_ADDRESS=$1
 INSTANCE_TYPE=$2
 INTERVAL=$3
 
-sudo aptitude update
-sudo aptitude -y install git-core python-dev python-argparse subversion
-sudo killall performance_report.py
+echo "Updating the Ubuntu package repository"
+sudo apt-get update > /dev/null
+sudo apt-get -y install git-core python-dev python-argparse subversion
 
 mkdir -p ~/tools
 cd ~/tools
 if [ -d "nagios-etc" ]
 then
     cd nagios-etc
+    cli/performance_report.py stop
     git pull origin master
     cd ..
 else
@@ -94,6 +95,7 @@ cd ..
 
 if [ $2 != "nagios" ]
 then
+    echo "Sending the Nagios packet to start monitoring"
     ~/tools/nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
 fi 
 

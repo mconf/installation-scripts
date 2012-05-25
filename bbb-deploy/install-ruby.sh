@@ -6,7 +6,9 @@ then
     exit 0
 fi
 
-sudo aptitude -y install zlib1g-dev libssl-dev libreadline5-dev libyaml-dev build-essential bison checkinstall libffi5 gcc checkinstall libreadline5 libyaml-0-2
+echo "Updating the Ubuntu package repository"
+sudo apt-get update > /dev/null
+sudo apt-get -y install zlib1g-dev libssl-dev libreadline5-dev libyaml-dev build-essential bison checkinstall libffi5 gcc checkinstall libreadline5 libyaml-0-2
 
 cd /tmp
 wget http://ftp.ruby-lang.org/pub/ruby/1.9/ruby-1.9.2-p290.tar.gz

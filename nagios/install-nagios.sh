@@ -1,18 +1,20 @@
 #!/bin/bash
 
+# git clone git://github.com/mconf/installation-scripts.git
+
 # Installing Nagios on Ubuntu Server 10.04.3 64 bits
 # http://nagios.sourceforge.net/docs/3_0/quickstart-ubuntu.html
 # http://www.vivaolinux.com.br/artigo/Monitorando-redes-e-servidores-com-Nagios/
 
-sudo aptitude update
-sudo aptitude install -y apache2 libapache2-mod-php5 build-essential libgd2-xpm-dev subversion git-core xinetd rrdtool librrds-perl
+sudo apt-get update
+sudo apt-get -y install apache2 libapache2-mod-php5 build-essential libgd2-xpm-dev subversion git-core xinetd rrdtool librrds-perl
 
-mkdir ~/downloads
+mkdir -p ~/downloads
 cd ~/downloads
-wget -nc http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.3.1.tar.gz
+wget -nc http://prdownloads.sourceforge.net/sourceforge/nagios/nagios-3.4.0.tar.gz
 wget -nc http://prdownloads.sourceforge.net/sourceforge/nagiosplug/nagios-plugins-1.4.15.tar.gz
 wget -nc http://sourceforge.net/projects/nagiosgraph/files/nagiosgraph/1.4.4/nagiosgraph-1.4.4.tar.gz
-tar xzf nagios-3.3.1.tar.gz
+tar xzf nagios-3.4.0.tar.gz
 tar xzf nagios-plugins-1.4.15.tar.gz
 tar xzf nagiosgraph-1.4.4.tar.gz
 
@@ -30,7 +32,6 @@ sudo make install
 sudo make install-init
 sudo make install-config
 sudo make install-commandmode
-
 sudo make install-webconf
 echo 'Enter the password for the user nagiosadmin'
 sudo htpasswd -c /usr/local/nagios/etc/htpasswd.users nagiosadmin
@@ -48,15 +49,16 @@ cd pynag-read-only/trunk/
 sudo python setup.py install
 
 # install Mconf stuff
-sudo aptitude -y install python-argparse
+sudo apt-get -y install python-argparse
 mkdir -p ~/tools
 cd ~/tools
 git clone git://github.com/mconf/nagios-etc.git
 sudo cp -r ~/tools/nagios-etc/libexec/nagios-hosts/ /usr/local/nagios/libexec/
 sudo cp -r ~/tools/nagios-etc/libexec/bigbluebutton/ /usr/local/nagios/libexec/
 sudo cp -r ~/tools/nagios-etc/etc/objects/mconf/ /usr/local/nagios/etc/objects/
-sudo cp /usr/local/nagios/etc/nagios.cfg /usr/local/nagios/etc/nagios.cfg.backup
-sudo cp /usr/local/nagios/etc/nsca.cfg /usr/local/nagios/etc/nsca.cfg.backup
+sudo cp /usr/local/nagios/etc/nagios.cfg /usr/local/nagios/etc/nagios.cfg.original
+# done on bbb-deploy/install-monitor.sh
+# sudo cp /usr/local/nagios/etc/nsca.cfg /usr/local/nagios/etc/nsca.cfg.backup
 sudo cp ~/tools/nagios-etc/etc/nagios.cfg ~/tools/nagios-etc/etc/nsca.cfg /usr/local/nagios/etc/
 
 sudo crontab -l | grep -v "nagios-hosts.py" > cron.jobs
@@ -75,15 +77,19 @@ sudo sed -i "s:.*accept_passive_service_checks=.*:accept_passive_service_checks=
 cd ~/downloads/nagios/cgi
 # http://exchange.nagios.org/directory/Addons/APIs/JSON/status-2Djson/details
 wget -O status-json.c "http://exchange.nagios.org/components/com_mtree/attachment.php?link_id=2498&cf_id=24"
+cp status-json.c status-json.c.original
+cp Makefile Makefile.original
 patch -R Makefile < ~/tools/installation-scripts/nagios/Makefile.patch
 patch -R status-json.c < ~/tools/installation-scripts/nagios/status-json.c.patch
 make all
 sudo make install
 
 cd ~/downloads/nagiosgraph-1.4.4
+cp etc/ngshared.pm etc/ngshared.pm.original
 patch etc/ngshared.pm < ~/tools/installation-scripts/nagios/ngshared.pm.patch
 sudo ./install.pl --layout debian
 echo "include /etc/nagiosgraph/nagiosgraph-apache.conf" | sudo tee -a /etc/apache2/httpd.conf
+sudo cp -r /etc/nagiosgraph /etc/nagiosgraph.backup
 sudo cp ~/tools/nagios-etc/nagiosgraph/* /etc/nagiosgraph/
 sudo sed -i "s:.*process_performance_data=.*:process_performance_data=1:g" /usr/local/nagios/etc/nagios.cfg
 sudo sed -i "s:.*service_perfdata_command=.*:service_perfdata_command=ng-process-service-perfdata-immediate:g" /usr/local/nagios/etc/nagios.cfg
