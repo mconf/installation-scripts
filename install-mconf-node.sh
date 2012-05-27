@@ -30,7 +30,14 @@ sudo apt-get -y install git-core htop iftop ant curl
 
 mkdir -p ~/tools
 cd ~/tools
-git clone git://github.com/mconf/installation-scripts.git
+if [ -d "installation-scripts" ]
+then
+    cd installation-scripts
+    git pull origin master
+    cd ..
+else
+    git clone git://github.com/mconf/installation-scripts.git
+fi
 cd installation-scripts/bbb-deploy/
 
 chmod +x install-bigbluebutton.sh
