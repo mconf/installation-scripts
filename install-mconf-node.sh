@@ -26,7 +26,7 @@ fi
 
 echo "Updating the Ubuntu package repository"
 sudo apt-get update > /dev/null
-sudo apt-get -y install git-core htop iftop ant
+sudo apt-get -y install git-core htop iftop ant curl
 
 mkdir -p ~/tools
 cd ~/tools
@@ -43,7 +43,8 @@ chmod +x install-notes.sh
 chmod +x install-monitor.sh
 ./install-monitor.sh lb.mconf.org bigbluebutton 10
 
-wget -O bigbluebutton.zip "http://mconf.org:8888/mconf-node/mconf-bbb-wrnp2012.zip"
+VERSION=$(curl http://mconf.org:8888/mconf-node/current.txt)
+wget -O bigbluebutton.zip "http://mconf.org:8888/mconf-node/$VERSION"
 sudo ant -f deploy_target.xml deploy
 
 chmod +x mconf-presentation.sh

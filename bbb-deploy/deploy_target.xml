@@ -128,7 +128,7 @@
             <!--
             sed -i 's:\(?v=\)\([^"]*\):\1${version}:g' ${deploy.client}/conf/config.xml
             -->
-            <arg value="sed -i &apos;s:\(?v=\)\([^&quot;]*\):\1${version}:g&apos; ${deploy.client}/conf/config.xml" />
+            <arg value="sed -i &apos;s:\(?v=\)\([^&quot;]*\):\1${TSTAMP}:g&apos; ${deploy.client}/conf/config.xml" />
         </exec>
         
         <exec executable="bash">
@@ -136,7 +136,7 @@
             <!--
             sed -i 's:<version>.*<\/version>:<version> - Mconf Server ${version}<\/version>:g' ${deploy.client}/conf/config.xml
             -->
-            <arg value="sed -i &apos;s:&lt;version&gt;.*&lt;\/version&gt;:&lt;version&gt;${version} - Mconf Server&lt;\/version&gt;:g&apos; ${deploy.client}/conf/config.xml" />
+            <arg value="sed -i &apos;s:&lt;version&gt;.*&lt;\/version&gt;:&lt;version&gt;${version} - Mconf Node (mconf.org)&lt;\/version&gt;:g&apos; ${deploy.client}/conf/config.xml" />
         </exec>
 
         <antcall target="finalize" />
