@@ -4,10 +4,13 @@ cd ~/dev/bigbluebutton
 
 cd bbb-api-demo
 gradle resolveDeps build
+sudo rm -rf /var/lib/tomcat6/webapps/demo*
+sudo cp build/libs/demo.war /var/lib/tomcat6/webapps/
+sudo service tomcat6 restart
 cd ..
 
 cd bbb-video
-gradle resolveDeps build
+gradle resolveDeps build deploy
 cd ..
 
 cd bbb-voice
@@ -30,7 +33,7 @@ gradle war deploy
 cd ../..
 
 cd bigbluebutton-client
-#ant locales clean-build-all
+ant locales
 ant clean-build-all
 cd ..
 
