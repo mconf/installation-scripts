@@ -142,7 +142,7 @@
         <antcall target="finalize" />
     </target>
     
-    <target name="finalize" depends="init">
+    <target name="finalize">
         <exec executable="service" failonerror="true" osfamily="unix">
             <arg line="tomcat6 start"/>
         </exec>
