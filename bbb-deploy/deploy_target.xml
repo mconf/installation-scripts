@@ -142,10 +142,25 @@
         <antcall target="finalize" />
     </target>
     
-    <target name="finalize">
-        <exec executable="bash">
+    <target name="finalize" depends="init">
+        <exec executable="service" failonerror="true" osfamily="unix">
+            <arg line="tomcat6 start"/>
+        </exec>
+        <exec executable="chmod" failonerror="true" osfamily="unix">
+            <arg line="+x ${deploy.config}/bbb-conf ${deploy.config}/bbb-record"/>
+        </exec>
+        <exec executable="sleep" failonerror="true" osfamily="unix">
+            <arg line="10s"/>
+        </exec>
+        <exec executable="bbb-conf" failonerror="true" osfamily="unix">
+            <arg line="--setsalt ${target.salt}"/>
+        </exec>
+        <exec executable="sed" failonerror="true" osfamily="unix">
+            <arg line="-i &#39;s:String salt = .*:String salt = &quot;${target.salt}&quot;;:g&#39; ${deploy.demo}/bbb_api_conf.jsp"/>
+        </exec>
+        <exec executable="bash" failonerror="true" osfamily="unix">
             <arg value="-c" />
-            <arg value="service tomcat6 start; chmod +x ${deploy.config}/*; sleep 10s; bbb-conf --setsalt ${target.salt}; sed -i &#39;s:String salt = .*:String salt = &quot;${target.salt}&quot;;:g&#39; ${deploy.demo}/bbb_api_conf.jsp; chmod +x enable-mobile-fs.sh; ./enable-mobile-fs.sh; bbb-conf --setip ${target.ip}; bbb-conf --clean; bbb-conf --check; echo 'Finalized, press Ctrl + C to quit'" />
+            <arg value="bbb-conf --setip ${target.ip}; echo 'Finalized, press Ctrl + C to quit'" />
         </exec>
     </target>
 </project>
