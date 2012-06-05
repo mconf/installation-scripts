@@ -42,11 +42,11 @@ sudo apt-get update > /dev/null
 sudo apt-get -y install git-core python-dev python-argparse subversion
 
 mkdir -p ~/tools
-cd ~/tools
+cd ~/tools/
 if [ -d "nagios-etc" ]
 then
-    cd nagios-etc
-    cli/performance_report.py stop
+    cd nagios-etc/
+    ~/tools/nagios-etc/cli/performance_report.py stop
     git pull origin master
     cd ..
 else
@@ -54,31 +54,44 @@ else
 fi
 
 mkdir -p ~/downloads
-cd ~/downloads
 
-# we are using the svn trunk instead of the lastest stable tag because of this:
-# http://code.google.com/p/psutil/issues/detail?id=248
-svn checkout http://psutil.googlecode.com/svn/trunk psutil-read-only
+cd ~/downloads/
+if [ -d "psutil-read-only" ]
+then
+    cd psutil-read-only/
+    svn update
+    cd ..
+else
+    # we are using the svn trunk instead of the lastest stable tag because of this:
+    # http://code.google.com/p/psutil/issues/detail?id=248
+    svn checkout http://psutil.googlecode.com/svn/trunk psutil-read-only
+fi
 cd psutil-read-only/
 python setup.py build
 sudo python setup.py install
-cd ..
-rm -rf psutil-read-only/
 
-wget -nc http://prdownloads.sourceforge.net/sourceforge/nagios/nsca-2.7.2.tar.gz
-tar xzf nsca-2.7.2.tar.gz
-cd nsca-2.7.2
-./configure
-make
-make install
+cd ~/downloads/
+NSCA_VERSION="2.7.2"
+NSCA="nsca-$NSCA_VERSION"
+NSCA_TAR="$NSCA.tar.gz"
+if [ ! -f "NSCA_TAR" ]
+then
+    wget -nc http://prdownloads.sourceforge.net/sourceforge/nagios/$NSCA_TAR
+    tar xzf $NSCA_TAR
+    cd $NSCA
+    ./configure
+    make
+    make install
+fi
 
+cd ~/downloads/$NSCA/
 if [ $2 == "nagios" ]
 then
     sudo cp src/nsca /usr/local/nagios/bin/
     sudo cp sample-config/nsca.cfg /usr/local/nagios/etc/
     sudo chmod a+r /usr/local/nagios/etc/nsca.cfg
     # install as XINETD service
-    sudo cp ~/downloads/nsca-2.7.2/sample-config/nsca.xinetd /etc/xinetd.d/nsca
+    sudo cp ~/downloads/$NSCA/sample-config/nsca.xinetd /etc/xinetd.d/nsca
     sudo sed -i "s:\tonly_from.*:#\0:g" /etc/xinetd.d/nsca
     sudo chmod a+r /etc/xinetd.d/nsca
     sudo service xinetd restart
@@ -91,15 +104,24 @@ fi
 sudo cp src/send_nsca /usr/local/nagios/bin/
 sudo cp sample-config/send_nsca.cfg /usr/local/nagios/etc/
 sudo chmod a+r /usr/local/nagios/etc/send_nsca.cfg
-cd ..
 
 if [ $2 != "nagios" ]
 then
     echo "Sending the Nagios packet to start monitoring"
-    ~/tools/nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
+    if [ $2 == "bigbluebutton" ]
+    then
+        CMD="~/tools/nagios-etc/cli/check_bbb_salt.sh $NAGIOS_ADDRESS $INTERVAL | tee /tmp/output_check_bbb_salt.txt 2>&1"
+        eval $CMD
+        # add a cron job to check if there's any modification on the BigBlueButton URL or salt
+        crontab -l | grep -v "check_bbb_salt.sh" > cron.jobs
+        echo "*/5 * * * * $CMD" >> cron.jobs
+        crontab cron.jobs
+        rm cron.jobs
+    else
+        ~/tools/nagios-etc/cli/server_up.sh $NAGIOS_ADDRESS $INSTANCE_TYPE
+    fi
 fi 
 
-crontab -l | grep -v "performance_report.py" > cron.jobs
-echo "@reboot ~/tools/nagios-etc/cli/performance_report.py start --server $NAGIOS_ADDRESS --hostname $HOST --send_rate $INTERVAL > /dev/null 2>&1" >> cron.jobs
-crontab cron.jobs
-rm cron.jobs
+chmod +x ~/tools/installation-scripts/bbb-deploy/start-monitor.sh
+~/tools/installation-scripts/bbb-deploy/start-monitor.sh $NAGIOS_ADDRESS $HOST $INTERVAL
+
