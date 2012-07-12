@@ -1,10 +1,19 @@
 # install chef client v -.10 on ubuntu server 10.04
 
-#define server ip:
-SERVER_IP=REPLACE_BY_CHEF_SERVER_IP
+function print_usage
+{
+	echo "Usage:"
+	echo "    $0 <chef_server>"
+	exit 1
+}
 
-sudo apt-get update
-sudo apt-get upgrade -y
+if [ $# -ne 1 ]
+then
+	print_usage
+fi
+
+SERVER_IP=$1
+
 echo "deb http://apt.opscode.com/ `lsb_release -cs`-0.10 main" | sudo tee /etc/apt/sources.list.d/opscode.list
 
 sudo mkdir -p /etc/apt/trusted.gpg.d
@@ -13,7 +22,6 @@ gpg --export packages@opscode.com | sudo tee /etc/apt/trusted.gpg.d/opscode-keyr
 
 sudo apt-get update
 sudo apt-get install opscode-keyring -y --force-yes
-sudo apt-get upgrade -y
 
 #create dir to copy server key
 sudo mkdir -p /etc/chef
