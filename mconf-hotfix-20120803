@@ -1,0 +1,14 @@
+#!/bin/bash
+
+cd /etc/bigbluebutton/nginx/
+sudo wget https://raw.github.com/mconf/bigbluebutton/mconf-bbb0.8/bbb-api-demo/demo.nginx
+
+cd /var/lib/tomcat6/webapps/
+sudo mkdir -p demo/
+cd demo/
+sudo wget https://raw.github.com/mconf/bigbluebutton/mconf-bbb0.8/bbb-api-demo/src/main/webapp/notes.jsp
+sudo chown -R tomcat6:tomcat6 ../demo/
+
+sudo service nginx restart
+sudo service tomcat6 restart
+
