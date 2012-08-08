@@ -30,6 +30,11 @@ sudo mkdir -p /etc/chef
 #TODO replace by a method that does not require password from the server side
 sudo scp mconf@$SERVER_IP:~/validation.pem /etc/chef/validation.pem
 
+# if a ruby version was previously installed, it's removed before install the chef-client
+# this is because ruby 1.8.0 is a dependency of the package chef
+sudo update-alternatives --remove ruby /usr/bin/ruby1.9.2
+sudo dpkg -r ruby1.9.2
+
 #install chef client via package passing server url
 echo "chef chef/chef_server_url string http://$SERVER_IP:4000" | sudo debconf-set-selections && sudo apt-get install chef -y
 
