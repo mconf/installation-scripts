@@ -6,7 +6,7 @@ sudo apt-get -y install openjdk-6-jdk
 mkdir -p ~/tools
 cd ~/tools
 rm -r xsbt*
-wget -O xsbt.tar.gz https://github.com/harrah/xsbt/tarball/0.11.2
+wget -O xsbt.tar.gz https://github.com/harrah/xsbt/tarball/v0.11.2
 tar xf xsbt.tar.gz
 mv -i harrah-xsbt-* xsbt
 wget -O sbt-launch.jar http://typesafe.artifactoryonline.com/typesafe/ivy-releases/org.scala-tools.sbt/sbt-launch/0.11.2/sbt-launch.jar
