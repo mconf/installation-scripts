@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# THIS SCRIPT IS DEPRECIATED, SEE http://code.google.com/p/mconf/wiki/MconfLive
+
 function print_usage
 {
 	echo "Usage:"
@@ -46,9 +48,6 @@ sudo bbb-conf --setip $1
 
 chmod +x install-notes.sh
 ./install-notes.sh
-
-chmod +x install-monitor.sh
-./install-monitor.sh lb.mconf.org bigbluebutton 10
 
 VERSION=$(curl http://mconf.org:8888/mconf-node/current.txt)
 wget -O bigbluebutton.zip "http://mconf.org:8888/mconf-node/$VERSION"
